@@ -1,0 +1,147 @@
+{
+  "name": "Azure Monitor - Extras",
+  "id": "yesoreyeram-grafana-azure-datasource",
+  "type": "datasource",
+  "category": "cloud",
+  "metrics": true,
+  "info": {
+    "version": "0.0.1",
+    "description": "Grafana Azure Monitor DataSource - Extras",
+    "author": {
+      "name": "Sriramajeyam Sugumaran",
+      "url": "https://www.google.com/search?q=Sriramajeyam+Sugumaran"
+    },
+    "logos": {
+      "small": "img/yesoreyeram-grafana-azure-datasource-logo.jpg",
+      "large": "img/yesoreyeram-grafana-azure-datasource-logo.jpg"
+    },
+    "keywords": [
+      "azure",
+      "azure resource graph"
+    ],
+    "links": [
+      {
+        "name": "Github",
+        "url": "https://github.com/yesoreyeram/grafana-azure-datasource"
+      }
+    ]
+  },
+  "dependencies": {
+    "grafanaVersion": "5.2.x",
+    "plugins": []
+  },
+  "routes": [
+    {
+      "path": "azuremonitor",
+      "method": "*",
+      "url": "https://management.azure.com",
+      "tokenAuth": {
+        "url": "https://login.microsoftonline.com/{{.JsonData.tenantId}}/oauth2/token",
+        "params": {
+          "grant_type": "client_credentials",
+          "client_id": "{{.JsonData.clientId}}",
+          "client_secret": "{{.SecureJsonData.clientSecret}}",
+          "resource": "https://management.azure.com/"
+        }
+      },
+      "headers": [
+        {
+          "name": "x-ms-app",
+          "content": "Grafana"
+        },
+        {
+          "name": "Cache-Control",
+          "content": "public, max-age=60"
+        },
+        {
+          "name": "Accept-Encoding",
+          "content": "gzip"
+        }
+      ]
+    },
+    {
+      "path": "govazuremonitor",
+      "method": "*",
+      "url": "https://management.usgovcloudapi.net",
+      "tokenAuth": {
+        "url": "https://login.microsoftonline.us/{{.JsonData.tenantId}}/oauth2/token",
+        "params": {
+          "grant_type": "client_credentials",
+          "client_id": "{{.JsonData.clientId}}",
+          "client_secret": "{{.SecureJsonData.clientSecret}}",
+          "resource": "https://management.usgovcloudapi.net/"
+        }
+      },
+      "headers": [
+        {
+          "name": "x-ms-app",
+          "content": "Grafana"
+        },
+        {
+          "name": "Cache-Control",
+          "content": "public, max-age=60"
+        },
+        {
+          "name": "Accept-Encoding",
+          "content": "gzip"
+        }
+      ]
+    },
+    {
+      "path": "germanyazuremonitor",
+      "method": "*",
+      "url": "https://management.microsoftazure.de",
+      "tokenAuth": {
+        "url": "https://login.microsoftonline.de/{{.JsonData.tenantId}}/oauth2/token",
+        "params": {
+          "grant_type": "client_credentials",
+          "client_id": "{{.JsonData.clientId}}",
+          "client_secret": "{{.SecureJsonData.clientSecret}}",
+          "resource": "https://management.microsoftazure.de/"
+        }
+      },
+      "headers": [
+        {
+          "name": "x-ms-app",
+          "content": "Grafana"
+        },
+        {
+          "name": "Cache-Control",
+          "content": "public, max-age=60"
+        },
+        {
+          "name": "Accept-Encoding",
+          "content": "gzip"
+        }
+      ]
+    },
+    {
+      "path": "chinaazuremonitor",
+      "method": "*",
+      "url": "https://management.chinacloudapi.cn",
+      "tokenAuth": {
+        "url": "https://login.chinacloudapi.cn/{{.JsonData.tenantId}}/oauth2/token",
+        "params": {
+          "grant_type": "client_credentials",
+          "client_id": "{{.JsonData.clientId}}",
+          "client_secret": "{{.SecureJsonData.clientSecret}}",
+          "resource": "https://management.chinacloudapi.cn/"
+        }
+      },
+      "headers": [
+        {
+          "name": "x-ms-app",
+          "content": "Grafana"
+        },
+        {
+          "name": "Cache-Control",
+          "content": "public, max-age=60"
+        },
+        {
+          "name": "Accept-Encoding",
+          "content": "gzip"
+        }
+      ]
+    }
+  ]
+}

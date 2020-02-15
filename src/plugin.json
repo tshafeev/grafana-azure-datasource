@@ -5,7 +5,7 @@
   "category": "cloud",
   "metrics": true,
   "info": {
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Grafana Azure Monitor DataSource - Extras",
     "author": {
       "name": "Sriramajeyam Sugumaran",
@@ -17,7 +17,9 @@
     },
     "keywords": [
       "azure",
-      "azure resource graph"
+      "azure resource graph",
+      "appinsights",
+      "application insights"
     ],
     "links": [
       {
@@ -126,6 +128,34 @@
           "client_id": "{{.JsonData.clientId}}",
           "client_secret": "{{.SecureJsonData.clientSecret}}",
           "resource": "https://management.chinacloudapi.cn/"
+        }
+      },
+      "headers": [
+        {
+          "name": "x-ms-app",
+          "content": "Grafana"
+        },
+        {
+          "name": "Cache-Control",
+          "content": "public, max-age=60"
+        },
+        {
+          "name": "Accept-Encoding",
+          "content": "gzip"
+        }
+      ]
+    },
+    {
+      "path": "applicationinsights",
+      "method": "POST",
+      "url": "https://api.applicationinsights.io",
+      "tokenAuth": {
+        "url": "https://login.microsoftonline.com/{{.JsonData.tenantId}}/oauth2/token",
+        "params": {
+          "grant_type": "client_credentials",
+          "client_id": "{{.JsonData.clientId}}",
+          "client_secret": "{{.SecureJsonData.clientSecret}}",
+          "resource": "https://api.loganalytics.io"
         }
       },
       "headers": [

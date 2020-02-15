@@ -1,6 +1,6 @@
 {
   "name": "grafana-azure-datasource",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Grafana Azure Monitor DataSource - Extras",
   "main": "dist/module.js",
   "scripts": {

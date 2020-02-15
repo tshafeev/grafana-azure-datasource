@@ -3,3 +3,5 @@
 ## Supported Services
 
 * Azure Resource Graph
+
+* Azure Application Insights

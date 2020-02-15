@@ -3,17 +3,20 @@ import { DataSourceApi } from '@grafana/data';
 import { AzureConnection } from './azure/azure_connection/AzureConnection';
 import { AzureResourceGraphDataSource } from './azure/resource_graph/ResourceGraph';
 import { AzureApplicationInsightsDataSource } from './azure/application_insights/ApplicationInsights';
+import { AzureLogAnalyticsDataSource } from './azure/log_analytics/LogAnalytics';
 import * as CONFIG from './config';
 
 export class Datasource extends DataSourceApi {
   private azureResourceGraphDatasource: AzureResourceGraphDataSource;
   private azureApplicationInsightsDatasource: AzureApplicationInsightsDataSource;
+  private azureLogAnalyticsDatasource: AzureLogAnalyticsDataSource;
   /** @ngInject */
   constructor(private instanceSettings: any, private templateSrv: any) {
     super(instanceSettings);
     const azureConnection = new AzureConnection(this.instanceSettings);
     this.azureResourceGraphDatasource = new AzureResourceGraphDataSource(azureConnection, this.templateSrv);
     this.azureApplicationInsightsDatasource = new AzureApplicationInsightsDataSource(azureConnection, this.templateSrv);
+    this.azureLogAnalyticsDatasource = new AzureLogAnalyticsDataSource(azureConnection, this.templateSrv);
   }
 
   query(options: any) {
@@ -32,6 +35,15 @@ export class Datasource extends DataSourceApi {
     azureAppInsightsOptions.targets = filter(azureAppInsightsOptions.targets, ['queryType', CONFIG.AzureApplicationInsights]);
     if (azureAppInsightsOptions.targets.length > 0) {
       const argPromise = this.azureApplicationInsightsDatasource.query(azureAppInsightsOptions);
+      if (argPromise) {
+        promises.push(argPromise);
+      }
+    }
+
+    const azureLogAnalyticsOptions = cloneDeep(options);
+    azureLogAnalyticsOptions.targets = filter(azureLogAnalyticsOptions.targets, ['queryType', CONFIG.AzureLogAnalytics]);
+    if (azureLogAnalyticsOptions.targets.length > 0) {
+      const argPromise = this.azureLogAnalyticsDatasource.query(azureLogAnalyticsOptions);
       if (argPromise) {
         promises.push(argPromise);
       }

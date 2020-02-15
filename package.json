@@ -1,6 +1,6 @@
 {
   "name": "grafana-azure-datasource",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Grafana Azure Monitor DataSource - Extras",
   "main": "dist/module.js",
   "scripts": {
@@ -18,7 +18,8 @@
     "azure",
     "azure resource graph",
     "appinsights",
-    "application insights"
+    "application insights",
+    "loganalytics"
   ],
   "author": "Sriramajeyam Sugumaran",
   "license": "ISC",

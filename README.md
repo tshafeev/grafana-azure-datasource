@@ -5,3 +5,5 @@
 * Azure Resource Graph
 
 * Azure Application Insights
+
+* Azure Log Analytics

@@ -4,6 +4,8 @@
 
 * Azure Resource Graph
 
+* Azure Cost Analysis
+
 * Azure Application Insights
 
 * Azure Log Analytics

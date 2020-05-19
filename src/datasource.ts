@@ -4,12 +4,14 @@ import { AzureConnection } from './azure/azure_connection/AzureConnection';
 import { AzureResourceGraphDataSource } from './azure/resource_graph/ResourceGraph';
 import { AzureApplicationInsightsDataSource } from './azure/application_insights/ApplicationInsights';
 import { AzureLogAnalyticsDataSource } from './azure/log_analytics/LogAnalytics';
+import { AzureCostAnalysisDataSource } from './azure/azure_costanalysis/AzureCostAnalysis'
 import * as CONFIG from './config';
 
 export class Datasource extends DataSourceApi {
   private azureResourceGraphDatasource: AzureResourceGraphDataSource;
   private azureApplicationInsightsDatasource: AzureApplicationInsightsDataSource;
   private azureLogAnalyticsDatasource: AzureLogAnalyticsDataSource;
+  private azureConstAnalysisDatasource: AzureCostAnalysisDataSource;
   /** @ngInject */
   constructor(private instanceSettings: any, private templateSrv: any) {
     super(instanceSettings);
@@ -17,6 +19,7 @@ export class Datasource extends DataSourceApi {
     this.azureResourceGraphDatasource = new AzureResourceGraphDataSource(azureConnection, this.templateSrv);
     this.azureApplicationInsightsDatasource = new AzureApplicationInsightsDataSource(azureConnection, this.templateSrv);
     this.azureLogAnalyticsDatasource = new AzureLogAnalyticsDataSource(azureConnection, this.templateSrv);
+    this.azureConstAnalysisDatasource = new AzureCostAnalysisDataSource(azureConnection, this.templateSrv);
   }
 
   query(options: any) {
@@ -46,6 +49,15 @@ export class Datasource extends DataSourceApi {
       const argPromise = this.azureLogAnalyticsDatasource.query(azureLogAnalyticsOptions);
       if (argPromise) {
         promises.push(argPromise);
+      }
+    }
+
+    const azureCostAnalysisOptions = cloneDeep(options);
+    azureCostAnalysisOptions.targets = filter(azureCostAnalysisOptions.targets, ['queryType', CONFIG.AzureCostAnalysis]);
+    if (azureCostAnalysisOptions.targets.length > 0) {
+      const acmPromise = this.azureConstAnalysisDatasource.query(azureCostAnalysisOptions);
+      if (acmPromise) {
+        promises.push(acmPromise);
       }
     }
 

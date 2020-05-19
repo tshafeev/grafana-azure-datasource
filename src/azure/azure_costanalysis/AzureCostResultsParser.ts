@@ -22,8 +22,12 @@ export class AzureCostResultItem {
         } else if (query.granularity === "Monthly") {
             this.timestamp = new Date(row[2])
         }
-        if(query.data.dataSet.grouping){
-            this.label = row.filter((r, i) => (i < row.length - 1 && i > keyindex)).map(item => item || "-").join(":").trim();
+        if (query.data.dataSet.grouping) {
+            if (query.data.dataSet.grouping[0] && query.data.dataSet.grouping[0].type === "TagKey") {
+                this.label = row.filter((r, i) => (i < row.length - 1 && i > keyindex + 1)).map(item => item || "-").join(":").trim();
+            } else {
+                this.label = row.filter((r, i) => (i < row.length - 1 && i > keyindex)).map(item => item || "-").join(":").trim();
+            }
         } else {
             this.label = `cost`;
         }
@@ -47,6 +51,6 @@ export class AzureCostResultsParser {
             o.datapoints = costitems.filter(c => c.label === key).map(c => [c.cost, c.timestamp]).sort((a: any, b: any) => a[1] - b[1]);
             this.output.push(o);
         });
-        this.output = this.output.sort((a,b)=> b.target - a.target );
+        this.output = this.output.sort((a, b) => b.target - a.target);
     }
 }

@@ -1,15 +1,16 @@
 import { defaults } from 'lodash';
 import React, { PureComponent, ChangeEvent } from 'react';
 import { QueryEditorProps, DataQuery, SelectableValue } from '@grafana/data';
-import { FormLabel, Select, FormField } from '@grafana/ui';
+import { FormLabel, Select, FormField, Input } from '@grafana/ui';
 import { Datasource } from './datasource';
 import * as CONFIG from './config';
-import { ACA_SUPPORTED_GRANULARITY, ACA_SUPPORTED_GROUPING_TYPES, ACA_SUPPORTED_GROUPING_DIMENSIONS } from './azure/azure_costanalysis/AzureCostAnalysis';
+import { ACA_SUPPORTED_GRANULARITY, ACA_SUPPORTED_GROUPING_TYPES, ACA_SUPPORTED_GROUPING_DIMENSIONS, ACA_SUPPORTED_FILTER_TYPES } from './azure/azure_costanalysis/AzureCostAnalysis';
 
 const supportedAzureServices = CONFIG.supportedServices as SelectableValue[];
 const supportedACAGranularities = ACA_SUPPORTED_GRANULARITY as SelectableValue[];
 const supportedACAGroupingTypes = ACA_SUPPORTED_GROUPING_TYPES as SelectableValue[];
 const supportedACAGroupingDimensions = ACA_SUPPORTED_GROUPING_DIMENSIONS as SelectableValue[];
+const supportedACAFilterTypes = ACA_SUPPORTED_FILTER_TYPES as SelectableValue[];
 
 export interface AzureCostAnalysisGrouping {
   type: string;
@@ -142,13 +143,54 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
     azCostAnalysis.granularity = gran.value;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
+  onACAFilterTypeChange = (event: SelectableValue) => {
+    const filtertype = event.value;
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters[0].FilterType = filtertype;
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
+  onACAFilterNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const filtername = event.target.value;
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters[0].Name = filtername;
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
+  onACAFilterNameChangeDimension = (event: SelectableValue) => {
+    const filtername = event.value;
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters[0].Name = filtername;
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
+  onACAFilterOperatorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const operatorname = event.target.value;
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters[0].Operator = operatorname;
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
+  onACAFilterValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const valuename = event.target.value;
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters[0].Values = valuename.split(",");
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
   render() {
     const query = defaults(this.props.query, {
       azureResourceGraph: { query: '' },
       azureAppInsights: { query: `` },
       azureLogAnalytics: { query: `` },
       azureCostAnalysis: defaults(this.props.query.azureCostAnalysis, {
-        grouping: [{ type: "Dimension", name: "ServiceName" }]
+        grouping: [{ type: "Dimension", name: "ServiceName" }],
+        filters: [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }]
       }),
     });
     let QueryEditor;
@@ -302,6 +344,48 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
           <div></div>
         )
       }
+      let FilterField;
+      if (query.azureCostAnalysis.filters[0].FilterType === "None") {
+        FilterField = (<span></span>)
+      } else if (query.azureCostAnalysis.filters[0].FilterType === "Dimensions") {
+        FilterField = (
+          <span>
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <Select
+                  className="width-12"
+                  value={supportedACAGroupingDimensions.find((fil: any) => fil.value === query.azureCostAnalysis.filters[0].Name)}
+                  options={supportedACAGroupingDimensions}
+                  defaultValue={query.azureCostAnalysis.filters[0].Name}
+                  onChange={this.onACAFilterNameChangeDimension}
+                />
+              </div>
+              <div className="gf-form gf-form--grow">
+                <Input type="text" className="width-12" title="Operator" placeholder="Operator" value={query.azureCostAnalysis.filters[0].Operator} onChange={this.onACAFilterOperatorChange} disabled></Input>
+              </div>
+              <div className="gf-form gf-form--grow">
+                <Input type="text" className="width-12" title="Values; Comma seperated" placeholder="Values" value={query.azureCostAnalysis.filters[0].Values.join(",")} onChange={this.onACAFilterValueChange} ></Input>
+              </div>
+            </div>
+          </span>
+        );
+      } else if (query.azureCostAnalysis.filters[0].FilterType === "Tags") {
+        FilterField = (
+          <span>
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <Input type="text" className="width-12" title="Tag Name" placeholder="Tag Name" value={query.azureCostAnalysis.filters[0].Name} onChange={this.onACAFilterNameChange} ></Input>
+              </div>
+              <div className="gf-form gf-form--grow">
+                <Input type="text" className="width-12" title="Operator" placeholder="Operator" value={query.azureCostAnalysis.filters[0].Operator} onChange={this.onACAFilterOperatorChange} disabled></Input>
+              </div>
+              <div className="gf-form gf-form--grow">
+                <Input type="text" className="width-12" title="Tags; Comma seperated" placeholder="Tags" value={query.azureCostAnalysis.filters[0].Values.join(",")} onChange={this.onACAFilterValueChange} ></Input>
+              </div>
+            </div>
+          </span>
+        );
+      }
       QueryEditor = (
         <div>
           <div className="gf-form-inline">
@@ -342,7 +426,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
                   Group by
               </FormLabel>
                 <Select
-                  className="width-24"
+                  className="width-12"
                   value={supportedACAGroupingTypes.find((gran: any) => gran.value === query.azureCostAnalysis.grouping[0].type)}
                   options={supportedACAGroupingTypes}
                   defaultValue={query.azureCostAnalysis.grouping[0].type}
@@ -354,9 +438,23 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
           <div className="gf-form-inline">
             <div className="gf-form">
               <div className="gf-form gf-form--grow">
-
+                <FormLabel className="width-12" tooltip="Filter">
+                  Filter
+                </FormLabel>
               </div>
             </div>
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <Select
+                  className="width-12"
+                  value={supportedACAFilterTypes.find((gran: any) => gran.value === query.azureCostAnalysis.filters[0].FilterType)}
+                  options={supportedACAFilterTypes}
+                  defaultValue={query.azureCostAnalysis.filters[0].FilterType}
+                  onChange={this.onACAFilterTypeChange}
+                />
+              </div>
+            </div>
+            {FilterField}
           </div>
         </div>
       );

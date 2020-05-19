@@ -4,8 +4,8 @@ import { AzureCostResultsParser } from './AzureCostResultsParser';
 import { doBackendRequest } from '../../app/utils';
 
 export const ACA_SUPPORTED_GRANULARITY: any[] = [
-  { value: "Daily", label: "Daily" },
   { value: "None", label: "None" },
+  { value: "Daily", label: "Daily" },
   { value: "Monthly", label: "Monthly" }
 ]
 
@@ -25,6 +25,12 @@ export const ACA_SUPPORTED_GROUPING_DIMENSIONS: any[] = [
   { value: "MeterSubCategory", label: "Meter SubCategory" },
   { value: "PricingModel", label: "Pricing Model" },
   { value: "PublisherType", label: "Publisher Type" },
+];
+
+export const ACA_SUPPORTED_FILTER_TYPES: any[] = [
+  { value: "None", label: "None" },
+  { value: "Dimensions", label: "Dimensions" },
+  { value: "Tags", label: "Tags" },
 ];
 
 export class AzureCostQueryDataParam {
@@ -66,7 +72,23 @@ export class AzureCostAnalysisQuery extends AzureMonitorPluginQuery {
     if (grouping && grouping.length > 0 && grouping[0].type === "None") {
       delete this.data.dataSet.grouping;
     }
-    if (item.filter) {
+    if (item.filters && item.filters.length > 0 && item.filters[0].FilterType !== 'None') {
+      if (item.filters.length === 1) {
+        let filteritem: any = {};
+        filteritem[item.filters[0].FilterType] = item.filters[0];
+        delete filteritem[item.filters[0].FilterType].FilterType;
+        this.data.dataSet.filter = filteritem;
+      } else if (item.filters.length > 0) {
+        let filter: any = { And: [] };
+        item.filters.forEach((filterItem: any) => {
+          let filteritem: any = {};
+          filteritem[filterItem.FilterType] = filterItem;
+          delete filteritem[filterItem.FilterType].FilterType;
+          filter.And.push(filteritem);
+        });
+        this.data.dataSet.filter = filter;
+      }
+    } else if (item.filter) {
       this.data.dataSet.filter = item.filter;
     }
   }

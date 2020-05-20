@@ -215,7 +215,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
         </div>
       );
     } else if (query.queryType === CONFIG.AzureCostAnalysis) {
-      QueryEditor = <AzureCostAnalysisQueryEditor onChange={this.props.onChange} query={query} />;
+      QueryEditor = <AzureCostAnalysisQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource} />;
     }
     return (
       <div>

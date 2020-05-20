@@ -1,6 +1,9 @@
+import { defaults } from "lodash";
 import React, { PureComponent, ChangeEvent } from 'react';
 import { FormField, FormLabel, Select, Input } from '@grafana/ui';
 import { SelectableValue } from '@grafana/data';
+import { AzureConnection } from "./../azure_connection/AzureConnection";
+import { AzureSubscription } from "./../azure_subscription/AzureSubscription";
 
 const Granularities: SelectableValue[] = [
   { value: 'None', label: 'None' },
@@ -32,13 +35,24 @@ const FilterTypes: SelectableValue[] = [
   { value: 'Tags', label: 'Tags' },
 ];
 
-class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any> {
-  onACASubscriptionIDChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const acaSubscriptionId = event.target.value;
+class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any, any> {
+  state: any = defaults(this.state, { AzureSubscriptions: [] });
+  onACASubscriptionIDChange = (event: SelectableValue) => {
+    const acaSubscriptionId = event.value;
     const { query, onChange } = this.props;
     const azCostAnalysis: any = query.azureCostAnalysis;
     azCostAnalysis.subscriptionId = acaSubscriptionId;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
+  componentWillMount() {
+    if (this.state.AzureSubscriptions.length === 0) {
+      let az: AzureConnection = new AzureConnection(this.props.datasource.instanceSettings);
+      az.getSubscriptions().then((res: AzureSubscription[]) => {
+        this.setState({
+          AzureSubscriptions: res.map(r => { return { value: r.subscriptionId , label: r.name } as SelectableValue })
+        })
+      })
+    }
   };
   render() {
     const { query } = this.props;
@@ -46,20 +60,19 @@ class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any> {
       <div className="gf-form-inline">
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
-            <FormField
-              label="Subscription ID"
-              labelWidth={12}
-              inputWidth={24}
-              value={query.azureCostAnalysis.subscriptionId}
-              placeholder="Subscription ID"
-              tooltip="Subscription GUID"
+            <FormLabel className="width-12" tooltip="Subscription">Subscription</FormLabel>
+            <Select
+              className="width-24"
+              value={this.state.AzureSubscriptions.find((gran: any) => gran.value === query.azureCostAnalysis.subscriptionId)}
+              options={this.state.AzureSubscriptions}
+              defaultValue={query.azureCostAnalysis.subscriptionId}
               onChange={this.onACASubscriptionIDChange}
             />
           </div>
         </div>
       </div>
     );
-  }
+  };
 }
 class AzureCostAnalysisGranularityQuery extends PureComponent<any> {
   onACAGranularityChange = (gran: SelectableValue) => {
@@ -380,10 +393,10 @@ class AzureCostAnalysisFilterQuery extends PureComponent<any> {
 
 export class AzureCostAnalysisQueryEditor extends PureComponent<any> {
   render() {
-    const { query, onChange } = this.props;
+    const { query, onChange, datasource } = this.props;
     return (
       <div>
-        <AzureCostAnalysisSubscriptionIdQuery query={query} onChange={onChange}></AzureCostAnalysisSubscriptionIdQuery>
+        <AzureCostAnalysisSubscriptionIdQuery query={query} onChange={onChange} datasource={datasource}></AzureCostAnalysisSubscriptionIdQuery>
         <AzureCostAnalysisGranularityQuery query={query} onChange={onChange}></AzureCostAnalysisGranularityQuery>
         <AzureCostAnalysisGroupingQuery query={query} onChange={onChange}></AzureCostAnalysisGroupingQuery>
         <AzureCostAnalysisFilterQuery query={query} onChange={onChange}></AzureCostAnalysisFilterQuery>

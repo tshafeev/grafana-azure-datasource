@@ -4,7 +4,7 @@ import { AzureConnection } from './azure/azure_connection/AzureConnection';
 import { AzureResourceGraphDataSource } from './azure/resource_graph/ResourceGraph';
 import { AzureApplicationInsightsDataSource } from './azure/application_insights/ApplicationInsights';
 import { AzureLogAnalyticsDataSource } from './azure/log_analytics/LogAnalytics';
-import { AzureCostAnalysisDataSource } from './azure/azure_costanalysis/AzureCostAnalysis'
+import { AzureCostAnalysisDataSource } from './azure/azure_costanalysis/AzureCostAnalysis';
 import * as CONFIG from './config';
 
 export class Datasource extends DataSourceApi {

@@ -23,30 +23,30 @@ export interface AzureCostAnalysisQueryStructure {
 }
 
 export const DEFAULT_COST_ANALYSIS_QUERY: AzureCostAnalysisQueryStructure = {
-  subscriptionId: "",
-  granularity: "Daily",
-  grouping: [{ type: "None", name: "None" }],
-  filters: [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }]
-}
+  subscriptionId: '',
+  granularity: 'Daily',
+  grouping: [{ type: 'None', name: 'None' }],
+  filters: [{ FilterType: 'None', Name: 'None', Operator: 'In', Values: [] }],
+};
 
 export const ACA_SUPPORTED_FILTER_TYPES: any[] = [
-  { value: "None", label: "None" },
-  { value: "Dimensions", label: "Dimensions" },
-  { value: "Tags", label: "Tags" },
+  { value: 'None', label: 'None' },
+  { value: 'Dimensions', label: 'Dimensions' },
+  { value: 'Tags', label: 'Tags' },
 ];
 
 export class AzureCostQueryDataParam {
   type: string;
   timeframe: string;
-  timePeriod: { from: string, to: string };
-  dataSet: any
+  timePeriod: { from: string; to: string };
+  dataSet: any;
   constructor(range: any, dataSet: any) {
-    this.type = "ActualCost"
-    this.timeframe = "Custom";
+    this.type = 'ActualCost';
+    this.timeframe = 'Custom';
     this.timePeriod = {
       from: new Date(range.from).toISOString(),
-      to: new Date(range.to).toISOString()
-    }
+      to: new Date(range.to).toISOString(),
+    };
     this.dataSet = dataSet;
   }
 }
@@ -61,30 +61,30 @@ export class AzureCostAnalysisQuery extends AzureMonitorPluginQuery {
     this.scope = templateSrv.replace(`/subscriptions/${item.subscriptionId}`, options.scopedVars);
     this.granularity = templateSrv.replace(item.granularity || 'Monthly', options.scopedVars);
     let grouping = [];
-    grouping = (item.grouping && item.grouping.length > 0 ? item.grouping : [{ "type": "Dimension", "name": "ServiceName" }]);
+    grouping = item.grouping && item.grouping.length > 0 ? item.grouping : [{ type: 'Dimension', name: 'ServiceName' }];
     this.data = new AzureCostQueryDataParam(options.range, {
-      "granularity": this.granularity,
-      "aggregation": {
-        "totalCost": { "name": "PreTaxCost", "function": "Sum" },
-        "totalCostUSD": { "name": "PreTaxCostUSD", "function": "Sum" }
+      granularity: this.granularity,
+      aggregation: {
+        totalCost: { name: 'PreTaxCost', function: 'Sum' },
+        totalCostUSD: { name: 'PreTaxCostUSD', function: 'Sum' },
       },
-      "sorting": [{ "direction": "ascending", "name": "UsageDate" }],
-      "grouping": grouping
+      sorting: [{ direction: 'ascending', name: 'UsageDate' }],
+      grouping: grouping,
     });
-    if (grouping && grouping.length > 0 && grouping[0].type === "None") {
+    if (grouping && grouping.length > 0 && grouping[0].type === 'None') {
       delete this.data.dataSet.grouping;
     }
     item.filters = item.filters.filter((f: AzureCostAnalysisFilter) => f && f.FilterType !== 'None');
     if (item.filters && item.filters.length > 0 && item.filters[0].FilterType !== 'None') {
       if (item.filters.length === 1) {
-        let filteritem: any = {};
+        const filteritem: any = {};
         filteritem[item.filters[0].FilterType] = item.filters[0];
         delete filteritem[item.filters[0].FilterType].FilterType;
         this.data.dataSet.filter = filteritem;
       } else if (item.filters.length > 0) {
-        let filter: any = { And: [] };
+        const filter: any = { And: [] };
         item.filters.forEach((filterItem: AzureCostAnalysisFilter) => {
-          let filteritem: any = {};
+          const filteritem: any = {};
           filteritem[filterItem.FilterType] = filterItem;
           delete filteritem[filterItem.FilterType].FilterType;
           filter.And.push(filteritem);
@@ -137,12 +137,7 @@ export class AzureCostAnalysisDataSource {
       })
       .map((target: any) => {
         const item: AzureCostAnalysisQuery = target.azureCostAnalysis;
-        const queryOption = new AzureCostAnalysisQuery(
-          target.refId,
-          options,
-          item,
-          this.templateSrv
-        );
+        const queryOption = new AzureCostAnalysisQuery(target.refId, options, item, this.templateSrv);
         return queryOption;
       });
     if (!queries || queries.length === 0) {
@@ -160,4 +155,4 @@ export class AzureCostAnalysisDataSource {
   }
 }
 
-export { AzureCostAnalysisQueryEditor } from "./AzureCostAnalysisQueryEditor";
+export { AzureCostAnalysisQueryEditor } from './AzureCostAnalysisQueryEditor';

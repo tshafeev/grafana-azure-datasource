@@ -1,16 +1,20 @@
 import { defaults } from 'lodash';
 import React, { PureComponent, ChangeEvent } from 'react';
 import { QueryEditorProps, DataQuery, SelectableValue } from '@grafana/data';
-import { FormLabel, Select, FormField, Input } from '@grafana/ui';
+import { FormLabel, Select, FormField } from '@grafana/ui';
 import { Datasource } from './datasource';
 import * as CONFIG from './config';
-import { AzureCostAnalysisQueryEditor, AzureCostAnalysisQueryStructure, DEFAULT_COST_ANALYSIS_QUERY } from "./azure/azure_costanalysis/AzureCostAnalysis";
+import {
+  AzureCostAnalysisQueryEditor,
+  AzureCostAnalysisQueryStructure,
+  DEFAULT_COST_ANALYSIS_QUERY,
+} from './azure/azure_costanalysis/AzureCostAnalysis';
 
 const supportedAzureServices = CONFIG.supportedServices as SelectableValue[];
 
 type Props = QueryEditorProps<Datasource, AzureMonitorQuery>;
 
-interface State { }
+interface State {}
 
 export interface AzureMonitorQuery extends DataQuery {
   queryType?: string;
@@ -31,7 +35,7 @@ export interface AzureMonitorQuery extends DataQuery {
 }
 
 export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
-  state: State = {};  
+  state: State = {};
   onServiceTypeChange = (service: SelectableValue) => {
     const { query, onChange } = this.props;
     onChange({ ...query, queryType: service.value });
@@ -211,9 +215,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
         </div>
       );
     } else if (query.queryType === CONFIG.AzureCostAnalysis) {
-      QueryEditor = (
-        <AzureCostAnalysisQueryEditor onChange={this.props.onChange} query={query} />
-      );
+      QueryEditor = <AzureCostAnalysisQueryEditor onChange={this.props.onChange} query={query} />;
     }
     return (
       <div>

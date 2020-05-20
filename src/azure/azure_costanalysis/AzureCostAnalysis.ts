@@ -16,7 +16,9 @@ export const ACA_SUPPORTED_GROUPING_TYPES: any[] = [
 ];
 
 export const ACA_SUPPORTED_GROUPING_DIMENSIONS: any[] = [
+  { value: "ResourceId", label: "Resource" },
   { value: "ResourceType", label: "Resource Type" },
+  { value: "ResourceLocation", label: "Resource Location" },
   { value: "ResourceGroupName", label: "Resource Group Name" },
   { value: "ServiceName", label: "Service Name" },
   { value: "ServiceTier", label: "Service Tier" },
@@ -25,6 +27,7 @@ export const ACA_SUPPORTED_GROUPING_DIMENSIONS: any[] = [
   { value: "MeterSubCategory", label: "Meter SubCategory" },
   { value: "PricingModel", label: "Pricing Model" },
   { value: "PublisherType", label: "Publisher Type" },
+  { value: "ChargeType", label: "Charge Type" },
 ];
 
 export const ACA_SUPPORTED_FILTER_TYPES: any[] = [

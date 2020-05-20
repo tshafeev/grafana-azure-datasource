@@ -1,7 +1,7 @@
 import { uniq } from "lodash";
 import { AzureCostAnalysisQuery } from "./AzureCostAnalysis";
 
-export class AzureCostResultItem {
+export class AzureCostAnalysisResultItem {
     timestamp: Date;
     label: string;
     cost: number;
@@ -34,14 +34,14 @@ export class AzureCostResultItem {
     }
 }
 
-export class AzureCostResultsParser {
+export class AzureCostAnalysisResultsParser {
     output: any[] = [];
     constructor(response: any[]) {
-        let costitems: AzureCostResultItem[] = [];
+        let costitems: AzureCostAnalysisResultItem[] = [];
         response.forEach(res => {
             if (res && res.result && res.result.data && res.result.data.properties && res.result.data.properties.rows) {
                 res.result.data.properties.rows.forEach((row: any) => {
-                    costitems.push(new AzureCostResultItem(row, res.result.data.properties.columns, res.query));
+                    costitems.push(new AzureCostAnalysisResultItem(row, res.result.data.properties.columns, res.query));
                 });
             }
         })

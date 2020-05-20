@@ -1,6 +1,6 @@
 import { AzureMonitorPluginQuery } from '../AzureMonitorPluginQuery';
 import { AzureConnection } from '../azure_connection/AzureConnection';
-import { AzureCostResultsParser } from './AzureCostResultsParser';
+import { AzureCostAnalysisResultsParser } from './AzureCostAnalysisResultsParser';
 import { doBackendRequest } from '../../app/utils';
 
 interface AzureCostAnalysisGrouping {
@@ -143,7 +143,7 @@ export class AzureCostAnalysisDataSource {
     }
     const promises = this.doQueries(queries);
     return Promise.all(promises).then((results: any) => {
-      const responseParser = new AzureCostResultsParser(results);
+      const responseParser = new AzureCostAnalysisResultsParser(results);
       return responseParser.output;
     });
   }

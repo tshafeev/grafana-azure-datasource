@@ -3,38 +3,31 @@ import { AzureConnection } from '../azure_connection/AzureConnection';
 import { AzureCostResultsParser } from './AzureCostResultsParser';
 import { doBackendRequest } from '../../app/utils';
 
-export const ACA_SUPPORTED_GRANULARITY: any[] = [
-  { value: "None", label: "None" },
-  { value: "Daily", label: "Daily" },
-  { value: "Monthly", label: "Monthly" }
-]
+interface AzureCostAnalysisGrouping {
+  type: string;
+  name: string;
+}
 
-export const ACA_SUPPORTED_GROUPING_TYPES: any[] = [
-  { value: "None", label: "None" },
-  { value: "Dimension", label: "Dimension" },
-  { value: "TagKey", label: "Tag" },
-];
+interface AzureCostAnalysisFilter {
+  FilterType: string;
+  Name: string;
+  Operator: string;
+  Values: string[];
+}
 
-export const ACA_SUPPORTED_GROUPING_DIMENSIONS: any[] = [
-  { value: "ResourceId", label: "Resource" },
-  { value: "ResourceType", label: "Resource Type" },
-  { value: "ResourceLocation", label: "Resource Location" },
-  { value: "ResourceGroupName", label: "Resource Group Name" },
-  { value: "ServiceName", label: "Service Name" },
-  { value: "ServiceTier", label: "Service Tier" },
-  { value: "Meter", label: "Meter" },
-  { value: "MeterCategory", label: "Meter Category" },
-  { value: "MeterSubCategory", label: "Meter SubCategory" },
-  { value: "PricingModel", label: "Pricing Model" },
-  { value: "PublisherType", label: "Publisher Type" },
-  { value: "ChargeType", label: "Charge Type" },
-];
+export interface AzureCostAnalysisQueryStructure {
+  subscriptionId: string;
+  granularity: string;
+  grouping: AzureCostAnalysisGrouping[];
+  filters: AzureCostAnalysisFilter[];
+}
 
-export const ACA_SUPPORTED_FILTER_TYPES: any[] = [
-  { value: "None", label: "None" },
-  { value: "Dimensions", label: "Dimensions" },
-  { value: "Tags", label: "Tags" },
-];
+export const DEFAULT_COST_ANALYSIS_QUERY: AzureCostAnalysisQueryStructure = {
+  subscriptionId: "",
+  granularity: "Daily",
+  grouping: [{ type: "None", name: "None" }],
+  filters: [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }]
+}
 
 export class AzureCostQueryDataParam {
   type: string;
@@ -159,3 +152,5 @@ export class AzureCostAnalysisDataSource {
     return undefined;
   }
 }
+
+export { AzureCostAnalysisQueryEditor } from "./AzureCostAnalysisQueryEditor";

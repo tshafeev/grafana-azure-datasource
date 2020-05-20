@@ -5,9 +5,9 @@ export const AzureCostAnalysis = `Azure Cost Analysis`;
 
 export const supportedServices: any[] = [
   { value: AzureResourceGraph, label: AzureResourceGraph },
-  { value: AzureApplicationInsights, label: AzureApplicationInsights },
-  { value: AzureLogAnalytics, label: AzureLogAnalytics },
   { value: AzureCostAnalysis, label: AzureCostAnalysis },
+  { value: AzureApplicationInsights, label: AzureApplicationInsights + ' - unstable' },
+  { value: AzureLogAnalytics, label: AzureLogAnalytics + ' - unstable' },
 ];
 
 export const CloudNameAzurePublic = 'azuremonitor';

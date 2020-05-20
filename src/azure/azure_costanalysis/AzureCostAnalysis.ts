@@ -1,31 +1,33 @@
 import { AzureMonitorPluginQuery } from '../AzureMonitorPluginQuery';
 import { AzureConnection } from '../azure_connection/AzureConnection';
-import { AzureCostResultsParser } from './AzureCostResultsParser';
+import { AzureCostAnalysisResultsParser } from './AzureCostAnalysisResultsParser';
 import { doBackendRequest } from '../../app/utils';
 
-export const ACA_SUPPORTED_GRANULARITY: any[] = [
-  { value: "Daily", label: "Daily" },
-  { value: "None", label: "None" },
-  { value: "Monthly", label: "Monthly" }
-]
+interface AzureCostAnalysisGrouping {
+  type: string;
+  name: string;
+}
 
-export const ACA_SUPPORTED_GROUPING_TYPES: any[] = [
-  { value: "None", label: "None" },
-  { value: "Dimension", label: "Dimension" },
-  { value: "TagKey", label: "Tag" },
-];
+interface AzureCostAnalysisFilter {
+  FilterType: string;
+  Name: string;
+  Operator: string;
+  Values: string[];
+}
 
-export const ACA_SUPPORTED_GROUPING_DIMENSIONS: any[] = [
-  { value: "ResourceType", label: "Resource Type" },
-  { value: "ResourceGroupName", label: "Resource Group Name" },
-  { value: "ServiceName", label: "Service Name" },
-  { value: "ServiceTier", label: "Service Tier" },
-  { value: "Meter", label: "Meter" },
-  { value: "MeterCategory", label: "Meter Category" },
-  { value: "MeterSubCategory", label: "Meter SubCategory" },
-  { value: "PricingModel", label: "Pricing Model" },
-  { value: "PublisherType", label: "Publisher Type" },
-];
+export interface AzureCostAnalysisQueryStructure {
+  subscriptionId: string;
+  granularity: string;
+  grouping: AzureCostAnalysisGrouping[];
+  filters: AzureCostAnalysisFilter[];
+}
+
+export const DEFAULT_COST_ANALYSIS_QUERY: AzureCostAnalysisQueryStructure = {
+  subscriptionId: "",
+  granularity: "Daily",
+  grouping: [{ type: "None", name: "None" }],
+  filters: [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }]
+}
 
 export class AzureCostQueryDataParam {
   type: string;
@@ -66,7 +68,24 @@ export class AzureCostAnalysisQuery extends AzureMonitorPluginQuery {
     if (grouping && grouping.length > 0 && grouping[0].type === "None") {
       delete this.data.dataSet.grouping;
     }
-    if (item.filter) {
+    item.filters = item.filters.filter((f: AzureCostAnalysisFilter) => f && f.FilterType !== 'None');
+    if (item.filters && item.filters.length > 0 && item.filters[0].FilterType !== 'None') {
+      if (item.filters.length === 1) {
+        let filteritem: any = {};
+        filteritem[item.filters[0].FilterType] = item.filters[0];
+        delete filteritem[item.filters[0].FilterType].FilterType;
+        this.data.dataSet.filter = filteritem;
+      } else if (item.filters.length > 0) {
+        let filter: any = { And: [] };
+        item.filters.forEach((filterItem: AzureCostAnalysisFilter) => {
+          let filteritem: any = {};
+          filteritem[filterItem.FilterType] = filterItem;
+          delete filteritem[filterItem.FilterType].FilterType;
+          filter.And.push(filteritem);
+        });
+        this.data.dataSet.filter = filter;
+      }
+    } else if (item.filter) {
       this.data.dataSet.filter = item.filter;
     }
   }
@@ -125,7 +144,7 @@ export class AzureCostAnalysisDataSource {
     }
     const promises = this.doQueries(queries);
     return Promise.all(promises).then((results: any) => {
-      const responseParser = new AzureCostResultsParser(results);
+      const responseParser = new AzureCostAnalysisResultsParser(results);
       return responseParser.output;
     });
   }
@@ -134,3 +153,5 @@ export class AzureCostAnalysisDataSource {
     return undefined;
   }
 }
+
+export { AzureCostAnalysisQueryEditor } from "./AzureCostAnalysisQueryEditor";

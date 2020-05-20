@@ -68,6 +68,7 @@ export class AzureCostAnalysisQuery extends AzureMonitorPluginQuery {
     if (grouping && grouping.length > 0 && grouping[0].type === "None") {
       delete this.data.dataSet.grouping;
     }
+    item.filters = item.filters.filter((f: AzureCostAnalysisFilter) => f && f.FilterType !== 'None');
     if (item.filters && item.filters.length > 0 && item.filters[0].FilterType !== 'None') {
       if (item.filters.length === 1) {
         let filteritem: any = {};
@@ -76,7 +77,7 @@ export class AzureCostAnalysisQuery extends AzureMonitorPluginQuery {
         this.data.dataSet.filter = filteritem;
       } else if (item.filters.length > 0) {
         let filter: any = { And: [] };
-        item.filters.forEach((filterItem: any) => {
+        item.filters.forEach((filterItem: AzureCostAnalysisFilter) => {
           let filteritem: any = {};
           filteritem[filterItem.FilterType] = filterItem;
           delete filteritem[filterItem.FilterType].FilterType;

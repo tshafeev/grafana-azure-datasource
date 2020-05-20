@@ -147,110 +147,153 @@ class AzureCostAnalysisGroupingQuery extends PureComponent<any> {
   }
 }
 class AzureCostAnalysisFilterQuery extends PureComponent<any> {
-  onACAFilterTypeChange = (event: SelectableValue) => {
+  onACAFilteAdd = ()=> {
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters.push({ FilterType: "None", Name: "None", Operator: "In", Values: [] });
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  }
+  onACAFilterRemove = (index: number)=> {
+    const { query, onChange } = this.props;
+    const azCostAnalysis: any = query.azureCostAnalysis;
+    azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
+    azCostAnalysis.filters.splice(index, 1)
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  }
+  onACAFilterTypeChange = (event: SelectableValue, index: number) => {
     const filtertype = event.value;
     const { query, onChange } = this.props;
     const azCostAnalysis: any = query.azureCostAnalysis;
     azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
-    azCostAnalysis.filters[0].FilterType = filtertype;
+    azCostAnalysis.filters[index].FilterType = filtertype;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
-  onACAFilterNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onACAFilterNameChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const filtername = event.target.value;
     const { query, onChange } = this.props;
     const azCostAnalysis: any = query.azureCostAnalysis;
     azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
-    azCostAnalysis.filters[0].Name = filtername;
+    azCostAnalysis.filters[index].Name = filtername;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
-  onACAFilterNameChangeDimension = (event: SelectableValue) => {
+  onACAFilterNameChangeDimension = (event: SelectableValue, index: number) => {
     const filtername = event.value;
     const { query, onChange } = this.props;
     const azCostAnalysis: any = query.azureCostAnalysis;
     azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
-    azCostAnalysis.filters[0].Name = filtername;
+    azCostAnalysis.filters[index].Name = filtername;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
-  onACAFilterOperatorChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onACAFilterOperatorChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const operatorname = event.target.value;
     const { query, onChange } = this.props;
     const azCostAnalysis: any = query.azureCostAnalysis;
     azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
-    azCostAnalysis.filters[0].Operator = operatorname;
+    azCostAnalysis.filters[index].Operator = operatorname;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
-  onACAFilterValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+  onACAFilterValueChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
     const valuename = event.target.value;
     const { query, onChange } = this.props;
     const azCostAnalysis: any = query.azureCostAnalysis;
     azCostAnalysis.filters = azCostAnalysis.filters || [{ FilterType: "None", Name: "None", Operator: "In", Values: [] }];
-    azCostAnalysis.filters[0].Values = valuename.split(",");
+    azCostAnalysis.filters[index].Values = valuename.split(",");
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
   render() {
     const { query } = this.props;
-    let FilterField;
-    if (query.azureCostAnalysis.filters[0].FilterType === "None") {
-      FilterField = (<span></span>)
-    } else if (query.azureCostAnalysis.filters[0].FilterType === "Dimensions") {
-      FilterField = (
-        <span>
-          <div className="gf-form">
-            <div className="gf-form gf-form--grow">
-              <Select
-                className="width-12"
-                value={GroupingDimensions.find((fil: any) => fil.value === query.azureCostAnalysis.filters[0].Name)}
-                options={GroupingDimensions}
-                defaultValue={query.azureCostAnalysis.filters[0].Name}
-                onChange={this.onACAFilterNameChangeDimension}
-              />
-            </div>
-            <div className="gf-form gf-form--grow">
-              <Input type="text" className="width-12" title="Operator" placeholder="Operator" value={query.azureCostAnalysis.filters[0].Operator} onChange={this.onACAFilterOperatorChange} disabled></Input>
-            </div>
-            <div className="gf-form gf-form--grow">
-              <Input type="text" className="width-12" title="Values; Comma seperated" placeholder="Values" value={query.azureCostAnalysis.filters[0].Values.join(",")} onChange={this.onACAFilterValueChange} ></Input>
-            </div>
-          </div>
-        </span>
-      );
-    } else if (query.azureCostAnalysis.filters[0].FilterType === "Tags") {
-      FilterField = (
-        <span>
-          <div className="gf-form">
-            <div className="gf-form gf-form--grow">
-              <Input type="text" className="width-12" title="Tag Name" placeholder="Tag Name" value={query.azureCostAnalysis.filters[0].Name} onChange={this.onACAFilterNameChange} ></Input>
-            </div>
-            <div className="gf-form gf-form--grow">
-              <Input type="text" className="width-12" title="Operator" placeholder="Operator" value={query.azureCostAnalysis.filters[0].Operator} onChange={this.onACAFilterOperatorChange} disabled></Input>
-            </div>
-            <div className="gf-form gf-form--grow">
-              <Input type="text" className="width-12" title="Tags; Comma seperated" placeholder="Tags" value={query.azureCostAnalysis.filters[0].Values.join(",")} onChange={this.onACAFilterValueChange} ></Input>
-            </div>
-          </div>
-        </span>
-      );
-    }
     return (
-      <div className="gf-form-inline">
-        <div className="gf-form">
-          <div className="gf-form gf-form--grow">
-            <FormLabel className="width-12" tooltip="Filter">Filter</FormLabel>
+      <div>
+        { query.azureCostAnalysis.filters.length === 0 ? (
+          <div className="gf-form-inline">
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <FormLabel className="width-12" tooltip="Filter">Filter</FormLabel>
+              </div>
+            </div>
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <span className="btn btn-success btn-small" style={{'margin': '5px' }} onClick={this.onACAFilteAdd}>Add Filter</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="gf-form">
-          <div className="gf-form gf-form--grow">
-            <Select
-              className="width-12"
-              value={FilterTypes.find((gran: any) => gran.value === query.azureCostAnalysis.filters[0].FilterType)}
-              options={FilterTypes}
-              defaultValue={query.azureCostAnalysis.filters[0].FilterType}
-              onChange={this.onACAFilterTypeChange}
-            />
+        ): null }
+        { query.azureCostAnalysis.filters.map((filter:any,index:number)=>(
+          <div className="gf-form-inline">
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <FormLabel className="width-12" tooltip="Filter">Filter {index+1}</FormLabel>
+              </div>
+            </div>
+            <div className="gf-form">
+              <div className="gf-form gf-form--grow">
+                <Select
+                  className="width-12"
+                  value={FilterTypes.find((gran: any) => gran.value === filter.FilterType)}
+                  options={FilterTypes}
+                  defaultValue={filter.FilterType}
+                  onChange={(e) => this.onACAFilterTypeChange(e, index)}
+                />
+              </div>
+            </div>
+            <div>
+              {filter.FilterType === "None" ? <span>
+                <div className="gf-form">
+                  <div className="gf-form gf-form--grow">
+                    <span className="btn btn-success btn-small" style={{'margin': '5px' }} onClick={this.onACAFilteAdd}>+</span>
+                    <span className="btn btn-danger btn-small" style={{'margin': '5px' }} onClick={()=>this.onACAFilterRemove(index)}>x</span>
+                  </div>
+                </div>
+              </span> : null}
+              {filter.FilterType === "Dimensions" ? (
+                <span>
+                  <div className="gf-form">
+                    <div className="gf-form gf-form--grow">
+                      <Select
+                        className="width-12"
+                        value={GroupingDimensions.find((fil: any) => fil.value === filter.Name)}
+                        options={GroupingDimensions}
+                        defaultValue={filter.Name}
+                        onChange={(e) => this.onACAFilterNameChangeDimension(e, index)}
+                      />
+                    </div>
+                    <div className="gf-form gf-form--grow">
+                      <Input type="text" className="width-12" title="Operator" placeholder="Operator" value={filter.Operator} onChange={(e) => this.onACAFilterOperatorChange(e, index)} disabled></Input>
+                    </div>
+                    <div className="gf-form gf-form--grow">
+                      <Input type="text" className="width-12" title="Values; Comma seperated" placeholder="Values" value={filter.Values.join(",")} onChange={(e) => this.onACAFilterValueChange(e, index)} ></Input>
+                    </div>
+                    <div className="gf-form gf-form--grow">
+                      <span className="btn btn-success btn-small" style={{'margin': '5px' }} onClick={this.onACAFilteAdd}>+</span>
+                      <span className="btn btn-danger btn-small" style={{'margin': '5px' }} onClick={()=>this.onACAFilterRemove(index)}>x</span>
+                    </div>
+                  </div>
+                </span>
+              ) : null}
+              {filter.FilterType === "Tags" ? (
+                <span>
+                  <div className="gf-form">
+                    <div className="gf-form gf-form--grow">
+                      <Input type="text" className="width-12" title="Tag Name" placeholder="Tag Name" value={filter.Name} onChange={(e)=>this.onACAFilterNameChange(e,index)} ></Input>
+                    </div>
+                    <div className="gf-form gf-form--grow">
+                      <Input type="text" className="width-12" title="Operator" placeholder="Operator" value={filter.Operator} onChange={(e)=>this.onACAFilterOperatorChange(e,index)} disabled></Input>
+                    </div>
+                    <div className="gf-form gf-form--grow">
+                      <Input type="text" className="width-12" title="Tags; Comma seperated" placeholder="Tags" value={filter.Values.join(",")} onChange={(e)=>this.onACAFilterValueChange(e,index)} ></Input>
+                    </div>
+                    <div className="gf-form gf-form--grow">
+                      <span className="btn btn-success btn-small" style={{'margin': '5px' }} onClick={this.onACAFilteAdd}>+</span>
+                      <span className="btn btn-danger btn-small" style={{'margin': '5px' }} onClick={()=>this.onACAFilterRemove(index)}>x</span>
+                    </div>
+                  </div>
+                </span>
+              ) : null}
+            </div>
           </div>
+        ))}
         </div>
-        <div>{FilterField}</div>
-      </div>
     )
   }
 }

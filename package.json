@@ -1,6 +1,6 @@
 {
   "name": "grafana-azure-datasource",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Grafana Azure Monitor DataSource - Extras",
   "main": "dist/module.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "grafana",
     "azure",
     "azure resource graph",
+    "azure cost analysis",
     "appinsights",
     "application insights",
     "loganalytics"

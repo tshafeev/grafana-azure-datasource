@@ -1,9 +1,9 @@
-import { defaults } from "lodash";
+import { defaults } from 'lodash';
 import React, { PureComponent, ChangeEvent } from 'react';
 import { FormField, FormLabel, Select, Input } from '@grafana/ui';
 import { SelectableValue } from '@grafana/data';
-import { AzureConnection } from "./../azure_connection/AzureConnection";
-import { AzureSubscription } from "./../azure_subscription/AzureSubscription";
+import { AzureConnection } from './../azure_connection/AzureConnection';
+import { AzureSubscription } from './../azure_subscription/AzureSubscription';
 
 const Granularities: SelectableValue[] = [
   { value: 'None', label: 'None' },
@@ -46,21 +46,25 @@ class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any, any> {
   };
   componentWillMount() {
     if (this.state.AzureSubscriptions.length === 0) {
-      let az: AzureConnection = new AzureConnection(this.props.datasource.instanceSettings);
+      const az: AzureConnection = new AzureConnection(this.props.datasource.instanceSettings);
       az.getSubscriptions().then((res: AzureSubscription[]) => {
         this.setState({
-          AzureSubscriptions: res.map(r => { return { value: r.subscriptionId , label: r.name } as SelectableValue })
-        })
-      })
+          AzureSubscriptions: res.map(r => {
+            return { value: r.subscriptionId, label: r.name } as SelectableValue;
+          }),
+        });
+      });
     }
-  };
+  }
   render() {
     const { query } = this.props;
     return (
       <div className="gf-form-inline">
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
-            <FormLabel className="width-12" tooltip="Subscription">Subscription</FormLabel>
+            <FormLabel className="width-12" tooltip="Subscription">
+              Subscription
+            </FormLabel>
             <Select
               className="width-24"
               value={this.state.AzureSubscriptions.find((gran: any) => gran.value === query.azureCostAnalysis.subscriptionId)}
@@ -72,7 +76,7 @@ class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any, any> {
         </div>
       </div>
     );
-  };
+  }
 }
 class AzureCostAnalysisGranularityQuery extends PureComponent<any> {
   onACAGranularityChange = (gran: SelectableValue) => {

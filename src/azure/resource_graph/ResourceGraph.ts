@@ -4,6 +4,19 @@ import { AzureSubscription } from '../azure_subscription/AzureSubscription';
 import { KustoResponseParser } from '../utils/KustoResponseParser';
 import { getResultsAsVariablesList, flattenTableResults } from '../utils/kusto_utils';
 import { doBackendRequest } from './../../app/utils';
+export { AzureResourceGraphQueryEditor } from './AzureResourceGraphQueryEditor';
+
+export interface AzureResourceGraphQueryStructure {
+  query: string;
+  top: number;
+  skip: number;
+}
+
+export const DEFAULT_RESOURCE_GRAPH_QUERY: AzureResourceGraphQueryStructure = {
+  query: '',
+  top: 1000,
+  skip: 0,
+};
 
 export class AzureResourceGraphQuery extends AzureMonitorPluginQuery {
   top: number;

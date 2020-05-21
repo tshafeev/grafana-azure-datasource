@@ -3,6 +3,17 @@ import { AzureConnection } from '../azure_connection/AzureConnection';
 import { AzureResource } from './../azure_resource/AzureResource';
 import { KustoResponseParser } from '../utils/KustoResponseParser';
 import { doBackendRequest } from './../../app/utils';
+export { LogAnalyticsQueryEditor } from './LogAnalyticsQueryEditor'
+
+export interface LAQueryStructure {
+  workspace: string;
+  query: string;
+}
+
+export const DEFAULT_LA_QUERY: LAQueryStructure = {
+  workspace: '',
+  query: ''
+};
 
 export class AzureLogAnalyticsQuery extends AzureMonitorPluginQuery {
   resourceId: string;

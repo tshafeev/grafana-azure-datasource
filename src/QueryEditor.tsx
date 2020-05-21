@@ -1,31 +1,25 @@
 import { defaults } from 'lodash';
-import React, { PureComponent, ChangeEvent } from 'react';
+import React, { PureComponent } from 'react';
 import { QueryEditorProps, DataQuery, SelectableValue } from '@grafana/data';
-import { FormLabel, Select, FormField } from '@grafana/ui';
+import { FormLabel, Select } from '@grafana/ui';
 import { Datasource } from './datasource';
 import * as CONFIG from './config';
 import { AzureResourceGraphQueryEditor, AzureResourceGraphQueryStructure, DEFAULT_RESOURCE_GRAPH_QUERY } from './azure/resource_graph/ResourceGraph';
-import {
-  AzureCostAnalysisQueryEditor,
-  AzureCostAnalysisQueryStructure,
-  DEFAULT_COST_ANALYSIS_QUERY,
-} from './azure/azure_costanalysis/AzureCostAnalysis';
-import { AppinsightsQueryEditor, DEFAULT_AI_QUERY, AppinsightsQueryStructure } from './azure/application_insights/ApplicationInsights'
+import { AzureCostAnalysisQueryEditor, AzureCostAnalysisQueryStructure, DEFAULT_COST_ANALYSIS_QUERY } from './azure/azure_costanalysis/AzureCostAnalysis';
+import { AppinsightsQueryEditor, AppinsightsQueryStructure, DEFAULT_AI_QUERY } from './azure/application_insights/ApplicationInsights'
+import { LogAnalyticsQueryEditor, LAQueryStructure, DEFAULT_LA_QUERY } from './azure/log_analytics/LogAnalytics';
 
 const supportedAzureServices = CONFIG.supportedServices as SelectableValue[];
 
 type Props = QueryEditorProps<Datasource, AzureMonitorQuery>;
 
-interface State {}
+interface State { }
 
 export interface AzureMonitorQuery extends DataQuery {
   queryType?: string;
   azureResourceGraph?: AzureResourceGraphQueryStructure;
   azureAppInsights?: AppinsightsQueryStructure;
-  azureLogAnalytics?: {
-    workspace: string;
-    query: string;
-  };
+  azureLogAnalytics?: LAQueryStructure;
   azureCostAnalysis?: AzureCostAnalysisQueryStructure;
 }
 
@@ -35,25 +29,11 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
     const { query, onChange } = this.props;
     onChange({ ...query, queryType: service.value });
   };
-  onLAWorkspaceIDChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const laId = event.target.value;
-    const { query, onChange } = this.props;
-    const azLogAnalytics: any = query.azureLogAnalytics;
-    azLogAnalytics.workspace = laId;
-    onChange({ ...query, azureLogAnalytics: azLogAnalytics });
-  };
-  onLAQueryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const laQuery = event.target.value;
-    const { query, onChange } = this.props;
-    const azLogAnalytics: any = query.azureLogAnalytics;
-    azLogAnalytics.query = laQuery;
-    onChange({ ...query, azureLogAnalytics: azLogAnalytics });
-  };
   render() {
     const query = defaults(this.props.query, {
       azureResourceGraph: defaults(this.props.query.azureResourceGraph, DEFAULT_RESOURCE_GRAPH_QUERY),
-      azureAppInsights:  defaults(this.props.query.azureAppInsights, DEFAULT_AI_QUERY),
-      azureLogAnalytics: { query: `` },
+      azureAppInsights: defaults(this.props.query.azureAppInsights, DEFAULT_AI_QUERY),
+      azureLogAnalytics: defaults(this.props.query.azureAppInsights, DEFAULT_LA_QUERY),
       azureCostAnalysis: defaults(this.props.query.azureCostAnalysis, DEFAULT_COST_ANALYSIS_QUERY),
     });
     let QueryEditor;
@@ -62,40 +42,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
     } else if (query.queryType === CONFIG.AzureApplicationInsights) {
       QueryEditor = (<AppinsightsQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource}></AppinsightsQueryEditor>);
     } else if (query.queryType === CONFIG.AzureLogAnalytics) {
-      QueryEditor = (
-        <div>
-          <div className="gf-form-inline">
-            <div className="gf-form">
-              <div className="gf-form gf-form--grow">
-                <FormField
-                  label="Workspace ID"
-                  labelWidth={12}
-                  inputWidth={24}
-                  onChange={this.onLAWorkspaceIDChange}
-                  value={query.azureLogAnalytics.workspace || ''}
-                  placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-                  tooltip="Log Anlaytics workspace ID"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="gf-form-inline">
-            <div className="gf-form">
-              <div className="gf-form gf-form--grow">
-                <FormLabel className="width-12" tooltip="Log Analytics Query">
-                  Query
-                </FormLabel>
-                <textarea
-                  value={query.azureLogAnalytics.query || ''}
-                  onChange={this.onLAQueryChange}
-                  className="gf-form-input min-width-30 width-30"
-                  rows={10}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      );
+      QueryEditor = (<LogAnalyticsQueryEditor></LogAnalyticsQueryEditor>);
     } else if (query.queryType === CONFIG.AzureCostAnalysis) {
       QueryEditor = <AzureCostAnalysisQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource} />;
     }

@@ -3,16 +3,16 @@ import { AzureConnection } from '../azure_connection/AzureConnection';
 import { AzureResource } from './../azure_resource/AzureResource';
 import { KustoResponseParser } from '../utils/KustoResponseParser';
 import { doBackendRequest } from './../../app/utils';
-export { AppinsightsQueryEditor } from "./AppinsightsQueryEditor"
+export { AppinsightsQueryEditor } from './AppinsightsQueryEditor';
 
 export interface AppinsightsQueryStructure {
   appInsightsAppId: string;
   query: string;
-};
+}
 
 export const DEFAULT_AI_QUERY: AppinsightsQueryStructure = {
   appInsightsAppId: '',
-  query: ''
+  query: '',
 };
 
 export class AzureApplicationInsightsQuery extends AzureMonitorPluginQuery {
@@ -27,7 +27,7 @@ export class AzureApplicationInsightsQuery extends AzureMonitorPluginQuery {
     this.appInsightsAppId = appInsightsAppId;
     this.query = query;
   }
-};
+}
 
 export class AzureApplicationInsightsDataSource {
   private url: string;
@@ -95,4 +95,4 @@ export class AzureApplicationInsightsDataSource {
   metricFindQuery(query: string) {
     return undefined;
   }
-};
+}

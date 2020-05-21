@@ -3,7 +3,7 @@ import { AzureConnection } from '../azure_connection/AzureConnection';
 import { AzureResource } from './../azure_resource/AzureResource';
 import { KustoResponseParser } from '../utils/KustoResponseParser';
 import { doBackendRequest } from './../../app/utils';
-export { LogAnalyticsQueryEditor } from './LogAnalyticsQueryEditor'
+export { LogAnalyticsQueryEditor } from './LogAnalyticsQueryEditor';
 
 export interface LAQueryStructure {
   workspace: string;
@@ -12,7 +12,7 @@ export interface LAQueryStructure {
 
 export const DEFAULT_LA_QUERY: LAQueryStructure = {
   workspace: '',
-  query: ''
+  query: '',
 };
 
 export class AzureLogAnalyticsQuery extends AzureMonitorPluginQuery {

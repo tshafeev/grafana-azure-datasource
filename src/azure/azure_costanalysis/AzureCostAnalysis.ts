@@ -15,14 +15,14 @@ interface AzureCostAnalysisFilter {
   Values: string[];
 }
 
-export interface AzureCostAnalysisQueryStructure {
+export interface AzureCostQueryStructure {
   subscriptionId: string;
   granularity: string;
   grouping: AzureCostAnalysisGrouping[];
   filters: AzureCostAnalysisFilter[];
 }
 
-export const DEFAULT_COST_ANALYSIS_QUERY: AzureCostAnalysisQueryStructure = {
+export const DEFAULT_COST_QUERY: AzureCostQueryStructure = {
   subscriptionId: '',
   granularity: 'Daily',
   grouping: [{ type: 'None', name: 'None' }],

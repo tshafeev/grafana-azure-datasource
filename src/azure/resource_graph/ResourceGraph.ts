@@ -132,6 +132,28 @@ export class AzureResourceGraphDataSource {
         const responseParser = new KustoResponseParser(results);
         return getResultsAsVariablesList(responseParser.output);
       });
+    } else if (query.startsWith(`Subscriptions(`) && query.endsWith(`)`)) {
+      const resourceGraphQuery = `resourcecontainers | where type == "microsoft.resources/subscriptions" | distinct name, subscriptionId | order by name asc`
+      const queryOption = new AzureResourceGraphQuery(refId, this.templateSrv.replace(resourceGraphQuery), 1000, 0, ['all']);
+      const promises = this.doQueries([queryOption]);
+      return Promise.all(promises).then((results: any) => {
+        const responseParser = new KustoResponseParser(results);
+        return getResultsAsVariablesList(responseParser.output);
+      });
+    } else if (query.startsWith(`ResourceGroups(`) && query.endsWith(`)`)) {
+      const subscriptionId = query.replace(`ResourceGroups(`, ``).slice(0, -1);
+      let resourceGraphQuery = ``;
+      if (subscriptionId) {
+        resourceGraphQuery = `resourcecontainers | where type != "microsoft.resources/subscriptions" and subscriptionId == "${subscriptionId}" | distinct name | order by name asc`
+      } else {
+        resourceGraphQuery = `resourcecontainers | where type != "microsoft.resources/subscriptions" | distinct name | order by name asc`
+      }
+      const queryOption = new AzureResourceGraphQuery(refId, this.templateSrv.replace(resourceGraphQuery), 1000, 0, ['all']);
+      const promises = this.doQueries([queryOption]);
+      return Promise.all(promises).then((results: any) => {
+        const responseParser = new KustoResponseParser(results);
+        return getResultsAsVariablesList(responseParser.output);
+      });
     }
     return undefined;
   }

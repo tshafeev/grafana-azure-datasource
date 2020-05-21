@@ -10,6 +10,7 @@ import {
   AzureCostAnalysisQueryStructure,
   DEFAULT_COST_ANALYSIS_QUERY,
 } from './azure/azure_costanalysis/AzureCostAnalysis';
+import { AppinsightsQueryEditor, DEFAULT_AI_QUERY, AppinsightsQueryStructure } from './azure/application_insights/ApplicationInsights'
 
 const supportedAzureServices = CONFIG.supportedServices as SelectableValue[];
 
@@ -20,10 +21,7 @@ interface State {}
 export interface AzureMonitorQuery extends DataQuery {
   queryType?: string;
   azureResourceGraph?: AzureResourceGraphQueryStructure;
-  azureAppInsights?: {
-    appInsightsAppId: string;
-    query: string;
-  };
+  azureAppInsights?: AppinsightsQueryStructure;
   azureLogAnalytics?: {
     workspace: string;
     query: string;
@@ -36,20 +34,6 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
   onServiceTypeChange = (service: SelectableValue) => {
     const { query, onChange } = this.props;
     onChange({ ...query, queryType: service.value });
-  };
-  onAppInsightsAppIDChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const appId = event.target.value;
-    const { query, onChange } = this.props;
-    const azAppInsights: any = query.azureAppInsights;
-    azAppInsights.appInsightsAppId = appId;
-    onChange({ ...query, azureAppInsights: azAppInsights });
-  };
-  onAppInsightsQueryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const aiQuery = event.target.value;
-    const { query, onChange } = this.props;
-    const azAppInsights: any = query.azureAppInsights;
-    azAppInsights.query = aiQuery;
-    onChange({ ...query, azureAppInsights: azAppInsights });
   };
   onLAWorkspaceIDChange = (event: ChangeEvent<HTMLInputElement>) => {
     const laId = event.target.value;
@@ -68,7 +52,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
   render() {
     const query = defaults(this.props.query, {
       azureResourceGraph: defaults(this.props.query.azureResourceGraph, DEFAULT_RESOURCE_GRAPH_QUERY),
-      azureAppInsights: { query: `` },
+      azureAppInsights:  defaults(this.props.query.azureAppInsights, DEFAULT_AI_QUERY),
       azureLogAnalytics: { query: `` },
       azureCostAnalysis: defaults(this.props.query.azureCostAnalysis, DEFAULT_COST_ANALYSIS_QUERY),
     });
@@ -76,40 +60,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
     if (query.queryType === CONFIG.AzureResourceGraph) {
       QueryEditor = <AzureResourceGraphQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource} />;
     } else if (query.queryType === CONFIG.AzureApplicationInsights) {
-      QueryEditor = (
-        <div>
-          <div className="gf-form-inline">
-            <div className="gf-form">
-              <div className="gf-form gf-form--grow">
-                <FormField
-                  label="Application Insights ID"
-                  labelWidth={12}
-                  inputWidth={24}
-                  onChange={this.onAppInsightsAppIDChange}
-                  value={query.azureAppInsights.appInsightsAppId || ''}
-                  placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-                  tooltip="AppInsights ID"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="gf-form-inline">
-            <div className="gf-form">
-              <div className="gf-form gf-form--grow">
-                <FormLabel className="width-12" tooltip="Application Insights Query">
-                  Query
-                </FormLabel>
-                <textarea
-                  value={query.azureAppInsights.query || ''}
-                  onChange={this.onAppInsightsQueryChange}
-                  className="gf-form-input min-width-30 width-30"
-                  rows={10}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      );
+      QueryEditor = (<AppinsightsQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource}></AppinsightsQueryEditor>);
     } else if (query.queryType === CONFIG.AzureLogAnalytics) {
       QueryEditor = (
         <div>

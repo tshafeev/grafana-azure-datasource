@@ -16,14 +16,19 @@ interface AzureCostAnalysisFilter {
 }
 
 export interface AzureCostQueryStructure {
+  alias: string;
   subscriptionId: string;
+  subscriptionName?: string;
   granularity: string;
   grouping: AzureCostAnalysisGrouping[];
   filters: AzureCostAnalysisFilter[];
+  filter?: any;
 }
 
 export const DEFAULT_COST_QUERY: AzureCostQueryStructure = {
+  alias: '',
   subscriptionId: '',
+  subscriptionName: '',
   granularity: 'Daily',
   grouping: [{ type: 'None', name: 'None' }],
   filters: [{ FilterType: 'None', Name: 'None', Operator: 'In', Values: [] }],
@@ -56,10 +61,13 @@ export class AzureCostAnalysisQuery extends AzureMonitorPluginQuery {
   query: any;
   data: AzureCostQueryDataParam;
   scope: string;
+  rawquery: AzureCostQueryStructure;
   constructor(refId = '', options: any, item: any, templateSrv: any) {
     super(refId, options);
     this.scope = templateSrv.replace(`/subscriptions/${item.subscriptionId}`, options.scopedVars);
     this.granularity = templateSrv.replace(item.granularity || 'Monthly', options.scopedVars);
+    this.rawquery = item;
+    this.rawquery.alias = templateSrv.replace(this.rawquery.alias, options.scopedVars);
     let grouping = [];
     grouping = item.grouping && item.grouping.length > 0 ? item.grouping : [{ type: 'Dimension', name: 'ServiceName' }];
     this.data = new AzureCostQueryDataParam(options.range, {

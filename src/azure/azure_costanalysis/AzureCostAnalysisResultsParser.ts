@@ -7,8 +7,8 @@ export class AzureCostAnalysisResultItem {
   cost: number;
   constructor(row: any[], columns: any[], query: AzureCostAnalysisQuery) {
     let keyindex = 2;
+    let label = '';
     this.timestamp = new Date();
-    this.label = '';
     this.cost = row[0];
     if (query.granularity === 'None') {
       this.timestamp = new Date(query.query.range.from);
@@ -24,20 +24,33 @@ export class AzureCostAnalysisResultItem {
     }
     if (query.data.dataSet.grouping) {
       if (query.data.dataSet.grouping[0] && query.data.dataSet.grouping[0].type === 'TagKey') {
-        this.label = row
+        label = row
           .filter((r, i) => i < row.length - 1 && i > keyindex + 1)
           .map(item => item || '-')
           .join(':')
           .trim();
       } else {
-        this.label = row
+        label = row
           .filter((r, i) => i < row.length - 1 && i > keyindex)
           .map(item => item || '-')
           .join(':')
           .trim();
       }
     } else {
-      this.label = `cost`;
+      label = `cost`;
+    }
+    this.label = label;
+    if (
+      query.rawquery.alias &&
+      query.rawquery.alias !== `{{default}}` &&
+      (query.rawquery.alias.indexOf('{{default}}') > -1 || this.label === 'cost')
+    ) {
+      this.label = query.rawquery.alias;
+      this.label = this.label.replace(/{{default}}/g, label);
+      this.label = this.label.replace(/{{metric}}/g, label);
+      this.label = this.label.replace(/{{subscription}}/g, query.rawquery.subscriptionName || query.rawquery.subscriptionId);
+      this.label = this.label.replace(/{{subscriptionname}}/g, query.rawquery.subscriptionName || query.rawquery.subscriptionId);
+      this.label = this.label.replace(/{{subscriptionid}}/g, query.rawquery.subscriptionId);
     }
   }
 }

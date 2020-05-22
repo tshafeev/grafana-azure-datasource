@@ -4,6 +4,7 @@ import { FormField, FormLabel, Select, Input } from '@grafana/ui';
 import { SelectableValue } from '@grafana/data';
 import { AzureConnection } from './../azure_connection/AzureConnection';
 import { AzureSubscription } from './../azure_subscription/AzureSubscription';
+import { AzureCostQueryStructure } from './AzureCostAnalysis';
 
 const Granularities: SelectableValue[] = [
   { value: 'None', label: 'None' },
@@ -40,8 +41,9 @@ class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any, any> {
   onACASubscriptionIDChange = (event: SelectableValue) => {
     const acaSubscriptionId = event.value;
     const { query, onChange } = this.props;
-    const azCostAnalysis: any = query.azureCostAnalysis;
+    const azCostAnalysis: AzureCostQueryStructure = query.azureCostAnalysis;
     azCostAnalysis.subscriptionId = acaSubscriptionId;
+    azCostAnalysis.subscriptionName = event.label;
     onChange({ ...query, azureCostAnalysis: azCostAnalysis });
   };
   componentWillMount() {
@@ -394,6 +396,29 @@ class AzureCostAnalysisFilterQuery extends PureComponent<any> {
     );
   }
 }
+class AzureCostAnalysisAliasyQuery extends PureComponent<any> {
+  onACAAliasChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { query, onChange } = this.props;
+    const azCostAnalysis: AzureCostQueryStructure = query.azureCostAnalysis;
+    azCostAnalysis.alias = event.target.value;
+    onChange({ ...query, azureCostAnalysis: azCostAnalysis });
+  };
+  render() {
+    const { query } = this.props;
+    return (
+      <div className="gf-form-inline">
+        <div className="gf-form">
+          <div className="gf-form gf-form--grow">
+            <FormLabel className="width-12" tooltip="Leave blank for default. Or refer as {{default}} for default value">
+              Alias
+            </FormLabel>
+            <Input className="width-24" value={query.azureCostAnalysis.alias} onChange={this.onACAAliasChange} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
 export class AzureCostAnalysisQueryEditor extends PureComponent<any> {
   render() {
@@ -404,6 +429,7 @@ export class AzureCostAnalysisQueryEditor extends PureComponent<any> {
         <AzureCostAnalysisGranularityQuery query={query} onChange={onChange}></AzureCostAnalysisGranularityQuery>
         <AzureCostAnalysisGroupingQuery query={query} onChange={onChange}></AzureCostAnalysisGroupingQuery>
         <AzureCostAnalysisFilterQuery query={query} onChange={onChange}></AzureCostAnalysisFilterQuery>
+        <AzureCostAnalysisAliasyQuery query={query} onChange={onChange}></AzureCostAnalysisAliasyQuery>
       </div>
     );
   }

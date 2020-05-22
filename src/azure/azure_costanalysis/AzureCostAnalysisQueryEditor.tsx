@@ -69,7 +69,13 @@ class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any, any> {
             </FormLabel>
             <Select
               className="width-24"
-              value={this.state.AzureSubscriptions.find((gran: any) => gran.value === query.azureCostAnalysis.subscriptionId)}
+              value={
+                this.state.AzureSubscriptions.find((gran: any) => gran.value === query.azureCostAnalysis.subscriptionId) || {
+                  label: query.azureCostAnalysis.subscriptionId,
+                  value: query.azureCostAnalysis.subscriptionId,
+                }
+              }
+              allowCustomValue
               options={this.state.AzureSubscriptions}
               defaultValue={query.azureCostAnalysis.subscriptionId}
               onChange={this.onACASubscriptionIDChange}

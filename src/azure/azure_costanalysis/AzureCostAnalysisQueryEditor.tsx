@@ -143,8 +143,8 @@ class AzureCostAnalysisGroupingQuery extends PureComponent<any> {
         <div>
           <FormField
             label="Tag Name"
-            labelWidth={8}
-            inputWidth={16}
+            labelWidth={12}
+            inputWidth={12}
             onChange={this.onACAGroupingNameChange}
             value={query.azureCostAnalysis.grouping[0].name}
             placeholder="Tag Name"
@@ -156,7 +156,7 @@ class AzureCostAnalysisGroupingQuery extends PureComponent<any> {
       GroupingNameField = (
         <span>
           <Select
-            className="width-24"
+            className="width-12"
             value={GroupingDimensions.find((gran: any) => gran.value === query.azureCostAnalysis.grouping[0].name)}
             options={GroupingDimensions}
             defaultValue={query.azureCostAnalysis.grouping[0].name}

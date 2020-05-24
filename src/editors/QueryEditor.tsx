@@ -61,7 +61,9 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
       <div>
         <div className="gf-form-inline">
           <div className="gf-form">
-            <label className='gf-form-label width-12' title='Service Type'>Service</label>
+            <label className="gf-form-label width-12" title="Service Type">
+              Service
+            </label>
             <Select
               className="width-24"
               value={supportedAzureServices.find((service: any) => service.value === query.queryType)}

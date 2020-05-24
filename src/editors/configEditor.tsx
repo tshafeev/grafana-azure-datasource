@@ -14,9 +14,9 @@ export interface AzureMonitorSecureJsonData {
   clientSecret?: string;
 }
 
-interface Props extends DataSourcePluginOptionsEditorProps<AzureMonitorDataSourceOptions> { }
+interface Props extends DataSourcePluginOptionsEditorProps<AzureMonitorDataSourceOptions> {}
 
-interface State { }
+interface State {}
 
 export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
   onCloudNameChange = (cloudName: SelectableValue<string>) => {
@@ -80,7 +80,9 @@ export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
     return (
       <div className="gf-form-group">
         <div className="gf-form">
-          <label className='gf-form-label width-10' title='Choose an Azure cloud Type'>Cloud Type</label>
+          <label className="gf-form-label width-10" title="Choose an Azure cloud Type">
+            Cloud Type
+          </label>
           <Select
             className="width-24"
             value={supportedCloudnames.find((cloud: any) => cloud.value === jsonData.cloudName)}
@@ -90,25 +92,49 @@ export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
           />
         </div>
         <div className="gf-form">
-          <label className='gf-form-label width-10' title='Tenant ID'>Tenant ID</label>
-          <input className='gf-form-input width-24' type="text" onChange={this.onTenantIdChange} value={jsonData.tenantId || ''} placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"></input>
+          <label className="gf-form-label width-10" title="Tenant ID">
+            Tenant ID
+          </label>
+          <input
+            className="gf-form-input width-24"
+            type="text"
+            onChange={this.onTenantIdChange}
+            value={jsonData.tenantId || ''}
+            placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+          ></input>
         </div>
         <div className="gf-form">
-          <label className='gf-form-label width-10' title='Client ID'>Client ID</label>
-          <input className='gf-form-input width-24' type="text" onChange={this.onClientIdChange} value={jsonData.clientId || ''} placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"></input>
+          <label className="gf-form-label width-10" title="Client ID">
+            Client ID
+          </label>
+          <input
+            className="gf-form-input width-24"
+            type="text"
+            onChange={this.onClientIdChange}
+            value={jsonData.clientId || ''}
+            placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+          ></input>
         </div>
         <div className="gf-form-inline">
           <div className="gf-form">
-              <label className='gf-form-label width-10' title='API Key'>API Key</label>
-              {
-                (secureJsonFields && secureJsonFields.clientSecret) as boolean ?
-                  <>
-                    <label className="gf-form-label width-18">Configured</label>
-                    <span className="gf-form-button btn btn-secondary width-6" onClick={this.onResetclientSecret}>Reset</span>
-                  </>
-                  :
-                  <input type="password" value={secureJsonData.clientSecret||''} className="gf-form-input width-24" onChange={this.onClientSecretChange}></input>
-              }
+            <label className="gf-form-label width-10" title="API Key">
+              API Key
+            </label>
+            {((secureJsonFields && secureJsonFields.clientSecret) as boolean) ? (
+              <>
+                <label className="gf-form-label width-18">Configured</label>
+                <span className="gf-form-button btn btn-secondary width-6" onClick={this.onResetclientSecret}>
+                  Reset
+                </span>
+              </>
+            ) : (
+              <input
+                type="password"
+                value={secureJsonData.clientSecret || ''}
+                className="gf-form-input width-24"
+                onChange={this.onClientSecretChange}
+              ></input>
+            )}
           </div>
         </div>
       </div>

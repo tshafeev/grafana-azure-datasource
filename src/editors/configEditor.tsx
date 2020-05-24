@@ -1,7 +1,7 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import { SecretFormField, FormField, FormLabel, Select } from '@grafana/ui';
 import { DataSourcePluginOptionsEditorProps, DataSourceJsonData, SelectableValue } from '@grafana/data';
-import * as CONFIG from './config';
+import { SecretFormField, FormField, Select } from './../grafana_ui';
+import * as CONFIG from './../config';
 
 const supportedCloudnames = CONFIG.supportedCloudnames as SelectableValue[];
 
@@ -80,9 +80,7 @@ export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
     return (
       <div className="gf-form-group">
         <div className="gf-form">
-          <FormLabel className="width-10" tooltip="Choose an Azure Cloud Type">
-            Cloud Type
-          </FormLabel>
+          <label className='gf-form-label width-10' title='Choose an Azure cloud Type'>Cloud Type</label>
           <Select
             className="width-24"
             value={supportedCloudnames.find((cloud: any) => cloud.value === jsonData.cloudName)}

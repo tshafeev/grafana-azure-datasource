@@ -1,6 +1,6 @@
 import { defaults } from 'lodash';
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormField, FormLabel, Select, Input } from '@grafana/ui';
+import { FormField, Select, Input } from './../../grafana_ui';
 import { SelectableValue } from '@grafana/data';
 import { AzureConnection } from './../azure_connection/AzureConnection';
 import { AzureSubscription } from './../azure_subscription/AzureSubscription';
@@ -64,9 +64,7 @@ class AzureCostAnalysisSubscriptionIdQuery extends PureComponent<any, any> {
       <div className="gf-form-inline">
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
-            <FormLabel className="width-12" tooltip="Subscription">
-              Subscription
-            </FormLabel>
+            <label className='gf-form-label width-12' title='Subscription'>Subscription</label>
             <Select
               className="width-24"
               value={
@@ -99,10 +97,7 @@ class AzureCostAnalysisGranularityQuery extends PureComponent<any> {
       <div className="gf-form-inline">
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
-            <FormLabel className="width-12" tooltip="Granularity">
-              {' '}
-              Granularity
-            </FormLabel>
+            <label className='gf-form-label width-12' title='Granularity'>Granularity</label>
             <Select
               className="width-24"
               value={Granularities.find((gran: any) => gran.value === query.azureCostAnalysis.granularity)}
@@ -177,9 +172,7 @@ class AzureCostAnalysisGroupingQuery extends PureComponent<any> {
       <div className="gf-form-inline">
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
-            <FormLabel className="width-12" tooltip="Group by">
-              Group by
-            </FormLabel>
+            <label className='gf-form-label width-12' title='Group By'>Group By</label>
             <Select
               className="width-12"
               value={GroupingTypes.find((gran: any) => gran.value === query.azureCostAnalysis.grouping[0].type)}
@@ -257,9 +250,7 @@ class AzureCostAnalysisFilterQuery extends PureComponent<any> {
           <div className="gf-form-inline">
             <div className="gf-form">
               <div className="gf-form gf-form--grow">
-                <FormLabel className="width-12" tooltip="Filter">
-                  Filter
-                </FormLabel>
+                <label className='gf-form-label width-12' title='Filter'>Filter</label>
               </div>
             </div>
             <div className="gf-form">
@@ -275,9 +266,7 @@ class AzureCostAnalysisFilterQuery extends PureComponent<any> {
           <div className="gf-form-inline">
             <div className="gf-form">
               <div className="gf-form gf-form--grow">
-                <FormLabel className="width-12" tooltip="Filter">
-                  Filter {index + 1}
-                </FormLabel>
+                <label className='gf-form-label width-12' title='Filter'>Filter {index + 1}</label>
               </div>
             </div>
             <div className="gf-form">
@@ -415,9 +404,7 @@ class AzureCostAnalysisAliasyQuery extends PureComponent<any> {
       <div className="gf-form-inline">
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
-            <FormLabel className="width-12" tooltip="Leave blank for default. Or refer as {{default}} for default value">
-              Alias
-            </FormLabel>
+            <label className='gf-form-label width-12' title='Leave blank for default. Or refer as {{default}} for default value'>Alias</label>
             <Input className="width-24" value={query.azureCostAnalysis.alias} onChange={this.onACAAliasChange} />
           </div>
         </div>

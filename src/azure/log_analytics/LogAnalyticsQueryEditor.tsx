@@ -1,5 +1,5 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormLabel, FormField } from '@grafana/ui';
+import { FormField } from './../../grafana_ui';
 
 export class LogAnalyticsQueryEditor extends PureComponent<any, any> {
   onLAWorkspaceIDChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -38,9 +38,7 @@ export class LogAnalyticsQueryEditor extends PureComponent<any, any> {
         <div className="gf-form-inline">
           <div className="gf-form">
             <div className="gf-form gf-form--grow">
-              <FormLabel className="width-12" tooltip="Log Analytics Query">
-                Query
-              </FormLabel>
+              <label className='gf-form-label width-12' title='Log Analytics Query'>Query</label>
               <textarea
                 value={query.azureLogAnalytics.query || ''}
                 onChange={this.onLAQueryChange}

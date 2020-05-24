@@ -1,5 +1,5 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormField, FormLabel } from '@grafana/ui';
+import { FormField } from './../../grafana_ui';
 
 export class AzureResourceGraphQueryEditor extends PureComponent<any> {
   onResourceGraphQueryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -31,9 +31,7 @@ export class AzureResourceGraphQueryEditor extends PureComponent<any> {
           <div className="gf-form-inline">
             <div className="gf-form">
               <div className="gf-form gf-form--grow">
-                <FormLabel className="width-12" tooltip="Resource Graph Query">
-                  Query
-                </FormLabel>
+                <label className='gf-form-label width-12' title='Resource Graph Query'>Query</label>
                 <textarea
                   value={query.azureResourceGraph.query || ''}
                   onChange={this.onResourceGraphQueryChange}

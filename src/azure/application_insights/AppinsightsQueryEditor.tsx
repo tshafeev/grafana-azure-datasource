@@ -1,5 +1,4 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormField } from './../../grafana_ui';
 
 export class AppinsightsQueryEditor extends PureComponent<any, any> {
   onAppInsightsAppIDChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -23,15 +22,8 @@ export class AppinsightsQueryEditor extends PureComponent<any, any> {
         <div className="gf-form-inline">
           <div className="gf-form">
             <div className="gf-form gf-form--grow">
-              <FormField
-                label="Application Insights ID"
-                labelWidth={12}
-                inputWidth={24}
-                onChange={this.onAppInsightsAppIDChange}
-                value={query.azureAppInsights.appInsightsAppId || ''}
-                placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-                tooltip="AppInsights ID"
-              />
+              <label className='gf-form-label width-12' title='Top'>Application Insights ID</label>
+              <input className='gf-form-input width-24' type="text" onChange={this.onAppInsightsAppIDChange} value={query.azureAppInsights.appInsightsAppId || ''} placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" title="AppInsights ID"></input>
             </div>
           </div>
         </div>

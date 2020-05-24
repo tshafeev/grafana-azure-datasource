@@ -1,6 +1,6 @@
 import { defaults } from 'lodash';
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormField, Select } from './../../grafana_ui';
+import { Select } from './../../grafana_ui';
 import { SelectableValue } from '@grafana/data';
 import { AzureConnection } from './../azure_connection/AzureConnection';
 import { AzureSubscription } from './../azure_subscription/AzureSubscription';
@@ -142,15 +142,12 @@ class AzureCostAnalysisGroupingQuery extends PureComponent<any> {
     if (query.azureCostAnalysis.grouping[0].type === 'TagKey') {
       GroupingNameField = (
         <div>
-          <FormField
-            label="Tag Name"
-            labelWidth={12}
-            inputWidth={12}
-            onChange={this.onACAGroupingNameChange}
-            value={query.azureCostAnalysis.grouping[0].name}
-            placeholder="Tag Name"
-            tooltip="Tag Name"
-          />
+          <div className="gf-form">
+            <div className="gf-form gf-form--grow">
+              <label className='gf-form-label width-12' title='Tag Name'>Tag Name</label>
+              <input className='gf-form-input width-12' type="text" onChange={this.onACAGroupingNameChange} value={query.azureCostAnalysis.grouping[0].name} placeholder="Tag Name" title="Tag Name"></input>
+            </div>
+          </div>
         </div>
       );
     } else if (query.azureCostAnalysis.grouping[0].type === 'Dimension') {

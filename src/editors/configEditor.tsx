@@ -1,6 +1,6 @@
 import React, { PureComponent, ChangeEvent } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceJsonData, SelectableValue } from '@grafana/data';
-import { SecretFormField, FormField, Select } from './../grafana_ui';
+import { SecretFormField, Select } from './../grafana_ui';
 import * as CONFIG from './../config';
 
 const supportedCloudnames = CONFIG.supportedCloudnames as SelectableValue[];
@@ -90,26 +90,12 @@ export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
           />
         </div>
         <div className="gf-form">
-          <FormField
-            label="Tenant ID"
-            labelWidth={10}
-            inputWidth={24}
-            onChange={this.onTenantIdChange}
-            value={jsonData.tenantId || ''}
-            placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-            tooltip="Tenant ID"
-          />
+          <label className='gf-form-label width-10' title='Tenant ID'>Tenant ID</label>
+          <input className='gf-form-input width-24' type="text" onChange={this.onTenantIdChange} value={jsonData.tenantId || ''} placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"></input>
         </div>
         <div className="gf-form">
-          <FormField
-            label="Client ID"
-            labelWidth={10}
-            inputWidth={24}
-            onChange={this.onClientIdChange}
-            value={jsonData.clientId || ''}
-            placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-            tooltip="Client ID"
-          />
+          <label className='gf-form-label width-10' title='Client ID'>Client ID</label>
+          <input className='gf-form-input width-24' type="text" onChange={this.onClientIdChange} value={jsonData.clientId || ''} placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"></input>
         </div>
         <div className="gf-form-inline">
           <div className="gf-form">

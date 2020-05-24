@@ -1,5 +1,4 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormField } from './../../grafana_ui';
 
 export class LogAnalyticsQueryEditor extends PureComponent<any, any> {
   onLAWorkspaceIDChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -23,15 +22,8 @@ export class LogAnalyticsQueryEditor extends PureComponent<any, any> {
         <div className="gf-form-inline">
           <div className="gf-form">
             <div className="gf-form gf-form--grow">
-              <FormField
-                label="Workspace ID"
-                labelWidth={12}
-                inputWidth={24}
-                onChange={this.onLAWorkspaceIDChange}
-                value={query.azureLogAnalytics.workspace || ''}
-                placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-                tooltip="Log Anlaytics workspace ID"
-              />
+              <label className='gf-form-label width-12' title='Workspace ID'>Workspace ID</label>
+              <input className='gf-form-input width-24' type="text" onChange={this.onLAWorkspaceIDChange} value={query.azureLogAnalytics.workspace || ''} placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" title="Log Analytics workspace ID"></input>
             </div>
           </div>
         </div>

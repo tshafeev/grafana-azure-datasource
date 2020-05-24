@@ -1,1 +1,1 @@
-export { SecretFormField, Select } from '@grafana/ui';
+export { Select } from '@grafana/ui';

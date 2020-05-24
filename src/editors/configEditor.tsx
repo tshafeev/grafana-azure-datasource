@@ -1,6 +1,6 @@
 import React, { PureComponent, ChangeEvent } from 'react';
 import { DataSourcePluginOptionsEditorProps, DataSourceJsonData, SelectableValue } from '@grafana/data';
-import { SecretFormField, Select } from './../grafana_ui';
+import { Select } from './../grafana_ui';
 import * as CONFIG from './../config';
 
 const supportedCloudnames = CONFIG.supportedCloudnames as SelectableValue[];
@@ -14,9 +14,9 @@ export interface AzureMonitorSecureJsonData {
   clientSecret?: string;
 }
 
-interface Props extends DataSourcePluginOptionsEditorProps<AzureMonitorDataSourceOptions> {}
+interface Props extends DataSourcePluginOptionsEditorProps<AzureMonitorDataSourceOptions> { }
 
-interface State {}
+interface State { }
 
 export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
   onCloudNameChange = (cloudName: SelectableValue<string>) => {
@@ -99,16 +99,16 @@ export class AzureMonitorConfigEditor extends PureComponent<Props, State> {
         </div>
         <div className="gf-form-inline">
           <div className="gf-form">
-            <SecretFormField
-              isConfigured={(secureJsonFields && secureJsonFields.clientSecret) as boolean}
-              value={secureJsonData.clientSecret || ''}
-              label="API Key"
-              placeholder="Client Secret"
-              labelWidth={10}
-              inputWidth={24}
-              onReset={this.onResetclientSecret}
-              onChange={this.onClientSecretChange}
-            />
+              <label className='gf-form-label width-10' title='API Key'>API Key</label>
+              {
+                (secureJsonFields && secureJsonFields.clientSecret) as boolean ?
+                  <>
+                    <label className="gf-form-label width-18">Configured</label>
+                    <span className="gf-form-button btn btn-secondary width-6" onClick={this.onResetclientSecret}>Reset</span>
+                  </>
+                  :
+                  <input type="password" value={secureJsonData.clientSecret||''} className="gf-form-input width-24" onChange={this.onClientSecretChange}></input>
+              }
           </div>
         </div>
       </div>

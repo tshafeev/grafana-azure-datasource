@@ -1,1 +1,1 @@
-export { FormField, Input, SecretFormField, Select } from '@grafana/ui';
+export { FormField, SecretFormField, Select } from '@grafana/ui';

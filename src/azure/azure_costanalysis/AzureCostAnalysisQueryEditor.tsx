@@ -1,6 +1,6 @@
 import { defaults } from 'lodash';
 import React, { PureComponent, ChangeEvent } from 'react';
-import { FormField, Select, Input } from './../../grafana_ui';
+import { FormField, Select } from './../../grafana_ui';
 import { SelectableValue } from '@grafana/data';
 import { AzureConnection } from './../azure_connection/AzureConnection';
 import { AzureSubscription } from './../azure_subscription/AzureSubscription';
@@ -308,33 +308,14 @@ class AzureCostAnalysisFilterQuery extends PureComponent<any> {
                       />
                     </div>
                     <div className="gf-form gf-form--grow">
-                      <Input
-                        type="text"
-                        className="width-12"
-                        title="Operator"
-                        placeholder="Operator"
-                        value={filter.Operator}
-                        onChange={e => this.onACAFilterOperatorChange(e, index)}
-                        disabled
-                      ></Input>
+                      <input type="text" className="gf-form-input width-12" title="Operator" placeholder="Operator" value={filter.Operator} onChange={e => this.onACAFilterOperatorChange(e, index)} disabled></input>
                     </div>
                     <div className="gf-form gf-form--grow">
-                      <Input
-                        type="text"
-                        className="width-12"
-                        title="Values; Comma seperated"
-                        placeholder="Values"
-                        value={filter.Values.join(',')}
-                        onChange={e => this.onACAFilterValueChange(e, index)}
-                      ></Input>
+                      <input type="text" className="gf-form-input width-12" title="Values; Comma seperated" placeholder="Values" value={filter.Values.join(',')} onChange={e => this.onACAFilterValueChange(e, index)}></input>
                     </div>
                     <div className="gf-form gf-form--grow">
-                      <span className="btn btn-success btn-small" style={{ margin: '5px' }} onClick={this.onACAFilteAdd}>
-                        +
-                      </span>
-                      <span className="btn btn-danger btn-small" style={{ margin: '5px' }} onClick={() => this.onACAFilterRemove(index)}>
-                        x
-                      </span>
+                      <span className="btn btn-success btn-small" style={{ margin: '5px' }} onClick={this.onACAFilteAdd}>+</span>
+                      <span className="btn btn-danger btn-small" style={{ margin: '5px' }} onClick={() => this.onACAFilterRemove(index)}>x</span>
                     </div>
                   </div>
                 </span>
@@ -343,43 +324,17 @@ class AzureCostAnalysisFilterQuery extends PureComponent<any> {
                 <span>
                   <div className="gf-form">
                     <div className="gf-form gf-form--grow">
-                      <Input
-                        type="text"
-                        className="width-12"
-                        title="Tag Name"
-                        placeholder="Tag Name"
-                        value={filter.Name}
-                        onChange={e => this.onACAFilterNameChange(e, index)}
-                      ></Input>
+                      <input type="text" className="gf-form-input width-12" title="Tag Name" placeholder="Tag Name" value={filter.Name} onChange={e => this.onACAFilterNameChange(e, index)}></input>
                     </div>
                     <div className="gf-form gf-form--grow">
-                      <Input
-                        type="text"
-                        className="width-12"
-                        title="Operator"
-                        placeholder="Operator"
-                        value={filter.Operator}
-                        onChange={e => this.onACAFilterOperatorChange(e, index)}
-                        disabled
-                      ></Input>
+                      <input type="text" className="gf-form-input width-12" title="Operator" placeholder="Operator" value={filter.Operator} onChange={e => this.onACAFilterOperatorChange(e, index)} disabled></input>
                     </div>
                     <div className="gf-form gf-form--grow">
-                      <Input
-                        type="text"
-                        className="width-12"
-                        title="Tags; Comma seperated"
-                        placeholder="Tags"
-                        value={filter.Values.join(',')}
-                        onChange={e => this.onACAFilterValueChange(e, index)}
-                      ></Input>
+                      <input type="text" className="gf-form-input width-12" title="Tags; Comma seperated" placeholder="Tags" value={filter.Values.join(',')} onChange={e => this.onACAFilterValueChange(e, index)}></input>
                     </div>
                     <div className="gf-form gf-form--grow">
-                      <span className="btn btn-success btn-small" style={{ margin: '5px' }} onClick={this.onACAFilteAdd}>
-                        +
-                      </span>
-                      <span className="btn btn-danger btn-small" style={{ margin: '5px' }} onClick={() => this.onACAFilterRemove(index)}>
-                        x
-                      </span>
+                      <span className="btn btn-success btn-small" style={{ margin: '5px' }} onClick={this.onACAFilteAdd}>+</span>
+                      <span className="btn btn-danger btn-small" style={{ margin: '5px' }} onClick={() => this.onACAFilterRemove(index)}>x</span>
                     </div>
                   </div>
                 </span>
@@ -405,7 +360,7 @@ class AzureCostAnalysisAliasyQuery extends PureComponent<any> {
         <div className="gf-form">
           <div className="gf-form gf-form--grow">
             <label className='gf-form-label width-12' title='Leave blank for default. Or refer as {{default}} for default value'>Alias</label>
-            <Input className="width-24" value={query.azureCostAnalysis.alias} onChange={this.onACAAliasChange} />
+            <input className="gf-form-input width-24" value={query.azureCostAnalysis.alias} onChange={this.onACAAliasChange} type="text" />
           </div>
         </div>
       </div>

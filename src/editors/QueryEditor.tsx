@@ -12,6 +12,11 @@ import {
 import { AzureCostAnalysisQueryEditor, AzureCostQueryStructure, DEFAULT_COST_QUERY } from './../azure/azure_costanalysis/AzureCostAnalysis';
 import { AppinsightsQueryEditor, AppinsightsQueryStructure, DEFAULT_AI_QUERY } from './../azure/application_insights/ApplicationInsights';
 import { LogAnalyticsQueryEditor, LAQueryStructure, DEFAULT_LA_QUERY } from './../azure/log_analytics/LogAnalytics';
+import {
+  AzureServiceHealthQueryEditor,
+  ServiceHealthQueryStructure,
+  DEFAULT_SERVICE_HEALTH_QUERY,
+} from './../azure/azure_service_health/ServiceHealth';
 
 const supportedAzureServices = CONFIG.supportedServices as SelectableValue[];
 
@@ -21,6 +26,7 @@ export interface AzureMonitorQuery extends DataQuery {
   azureAppInsights?: AppinsightsQueryStructure;
   azureLogAnalytics?: LAQueryStructure;
   azureCostAnalysis?: AzureCostQueryStructure;
+  azureServiceHealth?: ServiceHealthQueryStructure;
 }
 
 type Props = QueryEditorProps<Datasource, AzureMonitorQuery>;
@@ -39,6 +45,7 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
       azureAppInsights: defaults(this.props.query.azureAppInsights, DEFAULT_AI_QUERY),
       azureLogAnalytics: defaults(this.props.query.azureAppInsights, DEFAULT_LA_QUERY),
       azureCostAnalysis: defaults(this.props.query.azureCostAnalysis, DEFAULT_COST_QUERY),
+      azureServiceHealth: defaults(this.props.query.azureServiceHealth, DEFAULT_SERVICE_HEALTH_QUERY),
     });
     let QueryEditor;
     switch (query.queryType) {
@@ -53,6 +60,9 @@ export class AzureMonitorQueryEditor extends PureComponent<Props, State> {
         break;
       case CONFIG.AzureCostAnalysis:
         QueryEditor = <AzureCostAnalysisQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource} />;
+        break;
+      case CONFIG.AzureServiceHealth:
+        QueryEditor = <AzureServiceHealthQueryEditor onChange={this.props.onChange} query={query} datasource={this.props.datasource} />;
         break;
       default:
         break;

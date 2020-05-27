@@ -5,6 +5,7 @@ import { AzureResourceGraphDataSource } from './azure/resource_graph/ResourceGra
 import { AzureApplicationInsightsDataSource } from './azure/application_insights/ApplicationInsights';
 import { AzureLogAnalyticsDataSource } from './azure/log_analytics/LogAnalytics';
 import { AzureCostAnalysisDataSource } from './azure/azure_costanalysis/AzureCostAnalysis';
+import { AzureServiceHealthDataSource } from './azure/azure_service_health/ServiceHealth';
 import * as CONFIG from './config';
 
 export class Datasource extends DataSourceApi {
@@ -12,6 +13,7 @@ export class Datasource extends DataSourceApi {
   private azureApplicationInsightsDatasource: AzureApplicationInsightsDataSource;
   private azureLogAnalyticsDatasource: AzureLogAnalyticsDataSource;
   private azureConstAnalysisDatasource: AzureCostAnalysisDataSource;
+  private azureServiceHealthDatasource: AzureServiceHealthDataSource;
   /** @ngInject */
   constructor(private instanceSettings: any, private templateSrv: any) {
     super(instanceSettings);
@@ -20,6 +22,7 @@ export class Datasource extends DataSourceApi {
     this.azureApplicationInsightsDatasource = new AzureApplicationInsightsDataSource(azureConnection, this.templateSrv);
     this.azureLogAnalyticsDatasource = new AzureLogAnalyticsDataSource(azureConnection, this.templateSrv);
     this.azureConstAnalysisDatasource = new AzureCostAnalysisDataSource(azureConnection, this.templateSrv);
+    this.azureServiceHealthDatasource = new AzureServiceHealthDataSource(azureConnection, this.templateSrv);
   }
 
   query(options: any) {
@@ -29,6 +32,15 @@ export class Datasource extends DataSourceApi {
     azureResourceGraphOptions.targets = filter(azureResourceGraphOptions.targets, ['queryType', CONFIG.AzureResourceGraph]);
     if (azureResourceGraphOptions.targets.length > 0) {
       const argPromise = this.azureResourceGraphDatasource.query(azureResourceGraphOptions);
+      if (argPromise) {
+        promises.push(argPromise);
+      }
+    }
+
+    const azureServiceHealthOptions = cloneDeep(options);
+    azureServiceHealthOptions.targets = filter(azureServiceHealthOptions.targets, ['queryType', CONFIG.AzureServiceHealth]);
+    if (azureServiceHealthOptions.targets.length > 0) {
+      const argPromise = this.azureServiceHealthDatasource.query(azureServiceHealthOptions);
       if (argPromise) {
         promises.push(argPromise);
       }
